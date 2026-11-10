@@ -17,65 +17,70 @@
 
 /* ==========================================================================
    1. DATA
+   --------------------------------------------------------------------------
+   Facts below come from the official 2026 invitation, team application and
+   rules PDFs in docs/. Anything still being decided is marked TBD.
    ========================================================================== */
 const KAMHI_CUP_DATA = {
   /**
    * SITE PHASE SWITCH
-   * "registration" = Phase 1: announcement, registration checklist, FAQ, sponsors.
-   * "gameday"      = Phase 2: live schedule, standings, field map.
+   * "registration" = Phase 1: announcement, registration checklist, downloads, FAQ.
+   * "gameday"      = Phase 2: schedule, standings, field map. Load `games` and
+   *                  `standings` below (or from the Sheet feed) before switching.
    * "auto"         = registration until `gameDayFrom`, then gameday.
    * Board members can preview either phase with ?phase=gameday or ?phase=registration.
    */
   site: {
-    phase: "auto",
+    phase: "registration",
     gameDayFrom: "2026-12-11T18:00:00-08:00",
     allowUrlPreview: true,
     nav: {
       registration: [
-        { label: "Register", short: "Register", href: "#register", icon: "clipboard" },
-        { label: "Key Dates", short: "Dates", href: "#dates", icon: "calendar" },
-        { label: "FAQ", short: "FAQ", href: "#info", icon: "help" },
-        { label: "Sponsors", short: "Sponsors", href: "#sponsors", icon: "star" }
+        { label: "Register", href: "#register" },
+        { label: "Key Dates", href: "#dates" },
+        { label: "Downloads", href: "#documents" },
+        { label: "FAQ", href: "#info" }
+      ],
+      gameday: [
+        { label: "Schedule", href: "#schedule" },
+        { label: "Standings", href: "#standings" },
+        { label: "Rules & Field Map", href: "#rules" },
+        { label: "Downloads", href: "#documents" }
       ],
       fab: {
         registration: [
           { short: "Register", href: "#register", icon: "clipboard" },
-          { short: "Docs", href: "#documents", icon: "file", openDetails: "doc-browser" },
+          { short: "Docs", href: "#documents", icon: "file" },
           { short: "FAQ", href: "#info", icon: "help" },
           { short: "Contact", href: "#contact", icon: "mail" }
         ],
         gameday: [
           { short: "Schedule", href: "#schedule", icon: "calendar" },
           { short: "Standings", href: "#standings", icon: "chart" },
-          { short: "Docs", href: "#documents", icon: "file", openDetails: "doc-browser" },
+          { short: "Docs", href: "#documents", icon: "file" },
           { short: "Map", href: "#rules", icon: "pin", openDrawer: "marshals" }
         ]
-      },
-      gameday: [
-        { label: "Schedule", href: "#schedule" },
-        { label: "Standings", href: "#standings" },
-        { label: "Rules & Field Map", href: "#rules" },
-        { label: "Documents", href: "#documents", openDetails: "doc-browser" }
-      ]
+      }
     }
   },
 
-  /** Registration (Phase 1). Leave submitUrl blank to submit by email. */
   registration: {
     status: "open",                    // "open" | "closed"
-    submitUrl: "",                     // e.g. a Google Form link
-    submitEmail: "coachadmin154@gmail.com", // TODO: confirm the packet submission address
-    submitSubject: "Kamhi Cup 2026 Registration Packet"
+    fee: "$750",
+    rsvpUrl: "https://docs.google.com/forms/d/e/1FAIpQLSepSrYrav5oJeieJrlPkTBBe2OT1oFQxnCTUNWbiBb9-2yCLA/viewform",
+    paymentUrl: "",                    // StackPay portal link, once available
+    submitEmail: "tournamentayso154@gmail.com",
+    submitSubject: "Kamhi Cup 2026 Team Application"
   },
 
   contacts: [
-    { role: "Tournament Director", name: "TBD", email: "coachadmin154@gmail.com" },
-    { role: "Referee Administrator", name: "TBD", email: "coachadmin154@gmail.com" },
+    { role: "Tournament Director", name: "Cypress Kamhi Cup", email: "tournamentayso154@gmail.com" },
     { role: "Webmaster & Tech Ops", name: "Bryan Nim", email: "webmasterayso154@gmail.com" }
   ],
+  mailingAddress: ["AYSO Region 154", "ATTN: Cypress Kamhi Cup", "PO Box 999", "Cypress, California 90630"],
 
   meta: {
-    isSample: true,                    // shows a "Sample data" tag; set false once real data is wired in
+    isSample: false,
     lastUpdated: "2026-11-10"
   },
 
@@ -88,366 +93,214 @@ const KAMHI_CUP_DATA = {
   tournament: {
     name: "Kamhi Cup 2026",
     title: "The Kamhi Cup 2026",
-    subtitle: "All-Stars Tournament",
-    dates: "Sat, Dec 12, 2026 • Cypress, CA",
-    dayLong: "Saturday, December 12, 2026",
+    fullName: "2026 1st Annual Cypress Kamhi Cup All-Star Invitational",
+    dates: "Sat–Sun, Dec 12–13, 2026",
+    dayLong: "Saturday & Sunday, December 12–13, 2026",
+    venue: "Lexington Junior High School & Lexington Park",
+    city: "Cypress, CA",
+    rainout: "Dec 19–20, 2026",
     host: "AYSO Region 154 Cypress",
     timeZone: "America/Los_Angeles",
-    // One-day event. Kickoff time is TBD, so the countdown runs to the start of the day.
+    // Kickoff time is TBD, so the countdown runs to the start of Saturday.
     startsAt: "2026-12-12T00:00:00-08:00",
-    endsAt: "2026-12-12T18:00:00-08:00",
+    endsAt: "2026-12-13T18:00:00-08:00",
     kickoffTimeKnown: false,
     statusOverride: "",                // game day only: "", "live" or "complete" forces the hero badge
-    advancePerPool: 2,                 // top N per pool reach the finals
+    advancePerPool: 1,                 // pool winners (plus wildcards) advance to the medal round
     checkInMinutes: 60,
-    awards: "Gold Kamhi Cup medals for champions and silver medals for finalists in every division."
+    awards: "Medals for 1st–4th place in every division (3rd/4th only when a division has more than 4 teams). Tournament swag for every player and 2 coaches per team."
   },
 
   links: {
     fieldMap: "",                      // image / PDF URL; blank = jump to Field Marshal drawer
-    rulesPdf: "",                      // PDF URL; blank = jump to Rules drawer
+    rulesPdf: "docs/kamhi%20cup%20rules%202026.pdf",
     standings: "#standings",
     schedule: "#schedule"
   },
 
+  /** Official divisions (Boys & Girls). Half lengths: pool play / medal rounds. */
   divisions: [
-    { id: "10UB", label: "10U Boys",  format: "7v7",   halfMins: 25, ball: "Size 4" },
-    { id: "10UG", label: "10U Girls", format: "7v7",   halfMins: 25, ball: "Size 4" },
-    { id: "12UB", label: "12U Boys",  format: "9v9",   halfMins: 30, ball: "Size 4" },
-    { id: "12UG", label: "12U Girls", format: "9v9",   halfMins: 30, ball: "Size 4" },
-    { id: "14UB", label: "14U Boys",  format: "11v11", halfMins: 35, ball: "Size 5" },
-    { id: "14UG", label: "14U Girls", format: "11v11", halfMins: 35, ball: "Size 5" }
+    { id: "U10B", label: "U10 Boys",  format: "7v7",   roster: 10, poolHalf: 20, medalHalf: 25 },
+    { id: "U10G", label: "U10 Girls", format: "7v7",   roster: 10, poolHalf: 20, medalHalf: 25 },
+    { id: "U12B", label: "U12 Boys",  format: "9v9",   roster: 12, poolHalf: 25, medalHalf: 30 },
+    { id: "U12G", label: "U12 Girls", format: "9v9",   roster: 12, poolHalf: 25, medalHalf: 30 },
+    { id: "U14B", label: "U14 Boys",  format: "11v11", roster: 15, poolHalf: 30, medalHalf: 35 },
+    { id: "U14G", label: "U14 Girls", format: "11v11", roster: 15, poolHalf: 30, medalHalf: 35 }
   ],
 
-  fields: [
-    { id: "F1", name: "Field 1", venue: "Primary Complex", address: "Cypress, CA 90630", marshal: "Marshal HQ Tent (north end)" },
-    { id: "F2", name: "Field 2", venue: "Primary Complex", address: "Cypress, CA 90630", marshal: "Marshal HQ Tent (north end)" },
-    { id: "F3", name: "Field 3", venue: "Primary Complex", address: "Cypress, CA 90630", marshal: "Marshal Station B (east side)" },
-    { id: "F4", name: "Field 4", venue: "Primary Complex", address: "Cypress, CA 90630", marshal: "Marshal Station B (east side)" }
-  ],
+  /* ---------------- Phase 2 data (empty until schedules are drawn) ---------------- */
+  fields: [],                          // { id, name, venue, address, marshal }
+  games: [],                           // { match, division, pool, round: "pool" | "final", start, field, home, away, status, homeScore, awayScore }
+  standings: {},                       // standings[divisionId][poolId] = [{ team, gp, w, l, t, gf, ga, pts, fp }]
 
-  /**
-   * status: "upcoming" | "live" | "final"
-   * round : "pool" | "final"
-   */
-  games: [
-    { match: 1,  division: "10UB", pool: "A", round: "pool", start: "2026-12-12T08:00:00-08:00", field: "F1", home: "Cypress Thunder",   away: "Lakeview Strikers", status: "final",    homeScore: 3, awayScore: 1 },
-    { match: 2,  division: "10UB", pool: "B", round: "pool", start: "2026-12-12T08:00:00-08:00", field: "F2", home: "Pacific Hawks",     away: "Meadow Vipers",     status: "final",    homeScore: 0, awayScore: 0 },
-    { match: 3,  division: "10UG", pool: "A", round: "pool", start: "2026-12-12T09:15:00-08:00", field: "F1", home: "Oak Knoll Rapids",  away: "Westside Wolves",   status: "final",    homeScore: 2, awayScore: 2 },
-    { match: 4,  division: "10UG", pool: "B", round: "pool", start: "2026-12-12T09:15:00-08:00", field: "F2", home: "Harbor Surge",      away: "Canyon FC",         status: "live",     homeScore: 1, awayScore: 0 },
-    { match: 5,  division: "12UB", pool: "A", round: "pool", start: "2026-12-12T09:30:00-08:00", field: "F3", home: "Cypress Thunder",   away: "Oak Knoll Rapids",  status: "live",     homeScore: 1, awayScore: 1 },
-    { match: 6,  division: "12UB", pool: "B", round: "pool", start: "2026-12-12T10:45:00-08:00", field: "F3", home: "Pacific Hawks",     away: "Harbor Surge",      status: "upcoming", homeScore: null, awayScore: null },
-    { match: 7,  division: "12UG", pool: "A", round: "pool", start: "2026-12-12T10:45:00-08:00", field: "F4", home: "Lakeview Strikers", away: "Westside Wolves",   status: "upcoming", homeScore: null, awayScore: null },
-    { match: 8,  division: "12UG", pool: "B", round: "pool", start: "2026-12-12T12:00:00-08:00", field: "F4", home: "Meadow Vipers",     away: "Canyon FC",         status: "upcoming", homeScore: null, awayScore: null },
-    { match: 9,  division: "14UB", pool: "A", round: "pool", start: "2026-12-12T12:00:00-08:00", field: "F1", home: "Cypress Thunder",   away: "Westside Wolves",   status: "upcoming", homeScore: null, awayScore: null },
-    { match: 10, division: "14UB", pool: "B", round: "pool", start: "2026-12-12T13:30:00-08:00", field: "F2", home: "Pacific Hawks",     away: "Canyon FC",         status: "upcoming", homeScore: null, awayScore: null },
-    { match: 11, division: "14UG", pool: "A", round: "pool", start: "2026-12-12T13:30:00-08:00", field: "F1", home: "Lakeview Strikers", away: "Oak Knoll Rapids",  status: "upcoming", homeScore: null, awayScore: null },
-    { match: 12, division: "14UG", pool: "B", round: "pool", start: "2026-12-12T12:00:00-08:00", field: "F3", home: "Meadow Vipers",     away: "Harbor Surge",      status: "upcoming", homeScore: null, awayScore: null },
-    { match: 13, division: "10UB", pool: "",  round: "final", start: "2026-12-12T15:00:00-08:00", field: "F1", home: "Pool A Winner", away: "Pool B Winner", status: "upcoming", homeScore: null, awayScore: null },
-    { match: 14, division: "10UG", pool: "",  round: "final", start: "2026-12-12T15:00:00-08:00", field: "F2", home: "Pool A Winner", away: "Pool B Winner", status: "upcoming", homeScore: null, awayScore: null },
-    { match: 15, division: "12UB", pool: "",  round: "final", start: "2026-12-12T15:00:00-08:00", field: "F3", home: "Pool A Winner", away: "Pool B Winner", status: "upcoming", homeScore: null, awayScore: null },
-    { match: 16, division: "12UG", pool: "",  round: "final", start: "2026-12-12T15:00:00-08:00", field: "F4", home: "Pool A Winner", away: "Pool B Winner", status: "upcoming", homeScore: null, awayScore: null },
-    { match: 17, division: "14UB", pool: "",  round: "final", start: "2026-12-12T16:30:00-08:00", field: "F1", home: "Pool A Winner", away: "Pool B Winner", status: "upcoming", homeScore: null, awayScore: null },
-    { match: 18, division: "14UG", pool: "",  round: "final", start: "2026-12-12T16:30:00-08:00", field: "F2", home: "Pool A Winner", away: "Pool B Winner", status: "upcoming", homeScore: null, awayScore: null }
-  ],
-
-  /**
-   * standings[divisionId][poolId] = rows
-   * pts = match points (win/tie/shutout/goal bonuses)
-   * fp  = fair play / referee adjustment (negative for red cards)
-   * Total PTS and GD are calculated in the browser.
-   */
-  standings: {
-    "10UB": {
-      A: [
-        { team: "Cypress Thunder",   gp: 2, w: 2, l: 0, t: 0, gf: 6, ga: 1, pts: 17, fp: 0 },
-        { team: "Oak Knoll Rapids",  gp: 2, w: 1, l: 0, t: 1, gf: 4, ga: 2, pts: 11, fp: 0 },
-        { team: "Lakeview Strikers", gp: 2, w: 0, l: 1, t: 1, gf: 3, ga: 5, pts: 6,  fp: -2 },
-        { team: "Westside Wolves",   gp: 2, w: 0, l: 2, t: 0, gf: 1, ga: 6, pts: 1,  fp: 0 }
-      ],
-      B: [
-        { team: "Pacific Hawks",     gp: 2, w: 1, l: 0, t: 1, gf: 3, ga: 0, pts: 14, fp: 0 },
-        { team: "Harbor Surge",      gp: 2, w: 1, l: 1, t: 0, gf: 4, ga: 3, pts: 9,  fp: 0 },
-        { team: "Meadow Vipers",     gp: 2, w: 0, l: 1, t: 1, gf: 1, ga: 3, pts: 4,  fp: 0 },
-        { team: "Canyon FC",         gp: 2, w: 1, l: 1, t: 0, gf: 2, ga: 4, pts: 8,  fp: 0 }
-      ]
-    },
-    "10UG": {
-      A: [
-        { team: "Oak Knoll Rapids",  gp: 2, w: 1, l: 0, t: 1, gf: 5, ga: 3, pts: 12, fp: 0 },
-        { team: "Cypress Thunder",   gp: 2, w: 1, l: 1, t: 0, gf: 4, ga: 3, pts: 9,  fp: 0 },
-        { team: "Westside Wolves",   gp: 2, w: 0, l: 1, t: 1, gf: 4, ga: 5, pts: 6,  fp: 0 },
-        { team: "Lakeview Strikers", gp: 2, w: 1, l: 1, t: 0, gf: 2, ga: 4, pts: 7,  fp: -2 }
-      ],
-      B: [
-        { team: "Harbor Surge",      gp: 1, w: 1, l: 0, t: 0, gf: 2, ga: 0, pts: 9,  fp: 0 },
-        { team: "Pacific Hawks",     gp: 1, w: 1, l: 0, t: 0, gf: 3, ga: 1, pts: 8,  fp: 0 },
-        { team: "Meadow Vipers",     gp: 1, w: 0, l: 1, t: 0, gf: 1, ga: 3, pts: 1,  fp: 0 },
-        { team: "Canyon FC",         gp: 1, w: 0, l: 1, t: 0, gf: 0, ga: 2, pts: 0,  fp: 0 }
-      ]
-    },
-    "12UB": {
-      A: [
-        { team: "Cypress Thunder",   gp: 2, w: 1, l: 0, t: 1, gf: 5, ga: 2, pts: 13, fp: 0 },
-        { team: "Westside Wolves",   gp: 2, w: 1, l: 1, t: 0, gf: 4, ga: 3, pts: 10, fp: 0 },
-        { team: "Oak Knoll Rapids",  gp: 2, w: 0, l: 1, t: 1, gf: 3, ga: 4, pts: 6,  fp: 0 },
-        { team: "Lakeview Strikers", gp: 2, w: 1, l: 1, t: 0, gf: 2, ga: 5, pts: 7,  fp: -2 }
-      ],
-      B: [
-        { team: "Pacific Hawks",     gp: 2, w: 2, l: 0, t: 0, gf: 7, ga: 1, pts: 18, fp: 0 },
-        { team: "Meadow Vipers",     gp: 2, w: 1, l: 1, t: 0, gf: 3, ga: 3, pts: 9,  fp: 0 },
-        { team: "Harbor Surge",      gp: 2, w: 0, l: 1, t: 1, gf: 2, ga: 4, pts: 5,  fp: 0 },
-        { team: "Canyon FC",         gp: 2, w: 0, l: 2, t: 0, gf: 1, ga: 5, pts: 1,  fp: 0 }
-      ]
-    },
-    "12UG": {
-      A: [
-        { team: "Lakeview Strikers", gp: 2, w: 2, l: 0, t: 0, gf: 5, ga: 0, pts: 19, fp: 0 },
-        { team: "Cypress Thunder",   gp: 2, w: 1, l: 1, t: 0, gf: 3, ga: 2, pts: 9,  fp: 0 },
-        { team: "Oak Knoll Rapids",  gp: 2, w: 0, l: 1, t: 1, gf: 2, ga: 4, pts: 5,  fp: 0 },
-        { team: "Westside Wolves",   gp: 2, w: 0, l: 2, t: 0, gf: 0, ga: 4, pts: 0,  fp: 0 }
-      ],
-      B: [
-        { team: "Meadow Vipers",     gp: 2, w: 1, l: 0, t: 1, gf: 4, ga: 2, pts: 12, fp: 0 },
-        { team: "Harbor Surge",      gp: 2, w: 1, l: 0, t: 1, gf: 3, ga: 2, pts: 11, fp: 0 },
-        { team: "Pacific Hawks",     gp: 2, w: 0, l: 2, t: 0, gf: 2, ga: 4, pts: 2,  fp: 0 },
-        { team: "Canyon FC",         gp: 2, w: 0, l: 1, t: 1, gf: 2, ga: 3, pts: 5,  fp: -2 }
-      ]
-    },
-    "14UB": {
-      A: [
-        { team: "Westside Wolves",   gp: 2, w: 2, l: 0, t: 0, gf: 4, ga: 0, pts: 17, fp: 0 },
-        { team: "Cypress Thunder",   gp: 2, w: 1, l: 1, t: 0, gf: 3, ga: 2, pts: 9,  fp: 0 },
-        { team: "Lakeview Strikers", gp: 2, w: 0, l: 1, t: 1, gf: 1, ga: 3, pts: 4,  fp: 0 },
-        { team: "Oak Knoll Rapids",  gp: 2, w: 0, l: 1, t: 1, gf: 1, ga: 2, pts: 4,  fp: 0 }
-      ],
-      B: [
-        { team: "Canyon FC",         gp: 2, w: 1, l: 0, t: 1, gf: 3, ga: 1, pts: 12, fp: 0 },
-        { team: "Pacific Hawks",     gp: 2, w: 1, l: 0, t: 1, gf: 2, ga: 1, pts: 10, fp: 0 },
-        { team: "Harbor Surge",      gp: 2, w: 0, l: 1, t: 1, gf: 2, ga: 3, pts: 5,  fp: 0 },
-        { team: "Meadow Vipers",     gp: 2, w: 0, l: 2, t: 0, gf: 0, ga: 3, pts: 0,  fp: 0 }
-      ]
-    },
-    "14UG": {
-      A: [
-        { team: "Oak Knoll Rapids",  gp: 2, w: 1, l: 0, t: 1, gf: 4, ga: 1, pts: 13, fp: 0 },
-        { team: "Lakeview Strikers", gp: 2, w: 1, l: 0, t: 1, gf: 3, ga: 1, pts: 12, fp: 0 },
-        { team: "Cypress Thunder",   gp: 2, w: 0, l: 1, t: 1, gf: 2, ga: 4, pts: 5,  fp: 0 },
-        { team: "Westside Wolves",   gp: 2, w: 0, l: 2, t: 0, gf: 1, ga: 4, pts: 1,  fp: 0 }
-      ],
-      B: [
-        { team: "Harbor Surge",      gp: 2, w: 2, l: 0, t: 0, gf: 5, ga: 1, pts: 17, fp: 0 },
-        { team: "Meadow Vipers",     gp: 2, w: 1, l: 1, t: 0, gf: 3, ga: 3, pts: 9,  fp: 0 },
-        { team: "Canyon FC",         gp: 2, w: 0, l: 1, t: 1, gf: 2, ga: 3, pts: 5,  fp: 0 },
-        { team: "Pacific Hawks",     gp: 2, w: 0, l: 2, t: 0, gf: 1, ga: 4, pts: 1,  fp: -2 }
-      ]
-    }
-  },
-
-  /**
-   * Rules Hub drawers. Types: "steps" | "bullets" | "scoring" | "stations".
-   * `stations` is generated from the `fields` list above.
-   */
+  /** Game-day Rules & Field Map drawers. Types: "steps" | "bullets" | "scoring" | "stations". */
   rules: [
     {
       id: "check-in", icon: "clipboard", title: "Check-in Protocol", type: "steps",
-      intro: "Every team checks in at the Field Marshal HQ tent before its first match of the weekend.",
+      intro: "Teams check in 1 hour before their first game on Saturday, December 12.",
       items: [
-        "Arrive at least 60 minutes before your first scheduled match.",
-        "Head Coach or Team Manager presents the official eAYSO laminated roster and player cards.",
-        "Each player is verified against the roster; unregistered or missing players cannot be added on site.",
-        "Collect your team packet (field assignments, marshal contact, and fair play reminders).",
-        "Return to your assigned field 15 minutes before kickoff for referee equipment and roster check."
-      ]
+        "Bring your roster signed by your Regional Commissioner (if not already provided).",
+        "Bring Medical Release Forms for every player.",
+        "Bring 4–6 completed game cards listing your entire roster.",
+        "Pick up your team mementos at check-in."
+      ],
+      note: "The check-in location will be emailed to all teams within 1 week of the tournament."
     },
     {
-      id: "rules", icon: "trophy", title: "Tournament Rules & Scoring Tiebreakers", type: "scoring",
-      intro: "Pool play uses the Kamhi Cup point system. The top teams in each pool advance to the afternoon finals.",
+      id: "rules", icon: "trophy", title: "Scoring & Tiebreakers", type: "scoring",
+      intro: "Pool play standings use the ten-point system.",
       scoring: [
         { label: "Win", value: "6" },
         { label: "Tie", value: "3" },
         { label: "Loss", value: "0" },
-        { label: "Shutout bonus", value: "+1" },
-        { label: "Goal bonus (max 3)", value: "+1 each" },
-        { label: "Red card", value: "-2", negative: true }
+        { label: "Per goal (max 3)", value: "+1" },
+        { label: "Shutout (incl. 0-0)", value: "+1" },
+        { label: "Forfeit win (1-0)", value: "8" },
+        { label: "Red card / ejection", value: "-2", negative: true },
+        { label: "3 yellows in a match", value: "-1", negative: true }
       ],
       tiebreakersTitle: "Tiebreakers, in order",
       tiebreakers: [
         "Head-to-head result",
-        "Fewest goals allowed",
-        "Goal differential (maximum +/- 3 per game)",
-        "Most shutouts",
-        "Kicks from the penalty mark (IFAB procedures)"
+        "Fewest goals allowed (max 3 per game)",
+        "Most goals for (max 3 per game)",
+        "Kicks from the mark"
       ],
-      note: "The official rules document is the final authority. Use the Tournament Rules (PDF) button above once it is published."
+      note: "The official rules PDF is the final authority."
     },
     {
-      id: "marshals", icon: "pin", title: "Field Marshal Station Locations", type: "stations",
-      intro: "Field Marshals handle score reporting, injuries, and field issues. Find your fields' station below."
+      id: "marshals", icon: "pin", title: "Field Map & Stations", type: "stations",
+      intro: "Lexington Junior High School & Lexington Park, Cypress, CA."
     },
     {
-      id: "parking", icon: "car", title: "Parking & Canopy Guidelines", type: "bullets",
-      intro: "Please help us keep our host park safe and welcoming.",
+      id: "parking", icon: "car", title: "Facility Rules", type: "bullets",
       items: [
-        "Park only in marked stalls or where posted signs allow. No red-curb parking.",
-        "Carpool when you can and drop off players at the curb before parking.",
-        "Canopies must be weighted or staked and stay back from the touchline and field entrances.",
-        "No canopies in referee or team technical areas. Keep walkways and emergency routes clear.",
-        "Pack out all trash and bottles. Clean fields keep us invited back."
-      ],
-      note: "Final venue parking maps will be posted before kickoff."
+        "No pets or animals at any field.",
+        "No smoking at any field.",
+        "Spectators stay behind the control line, between the 18-yard lines, on their team's side.",
+        "Clean up all trash in your area before leaving."
+      ]
     }
   ],
 
   /* ---------------- Phase 1 content ---------------- */
 
-  /** Key dates. Leave `date` blank to show "TBD". */
+  /** Key dates. `date` is YYYY-MM-DD; add `dateEnd` for ranges; `approx` shows "~". */
   dates: [
-    { id: "open",    label: "Registration opens",          date: "2026-11-10" },
-    { id: "apps",    label: "Team applications due",       date: "" },
-    { id: "rosters", label: "Rosters & guest forms due",   date: "" },
-    { id: "refs",    label: "Referee forms due",           date: "" },
-    { id: "day",     label: "Tournament day",              date: "2026-12-12", highlight: true }
+    { id: "open",    label: "Registration open",          date: "2026-11-10", openNow: true },
+    { id: "refund",  label: "Full-refund withdrawal cutoff", date: "2026-11-15" },
+    { id: "apps",    label: "Application deadline",       date: "2026-11-30" },
+    { id: "sched",   label: "Schedules posted",           date: "2026-12-05", approx: true },
+    { id: "day",     label: "Tournament weekend",         date: "2026-12-12", dateEnd: "2026-12-13", highlight: true },
+    { id: "rainout", label: "Rainout dates",              date: "2026-12-19", dateEnd: "2026-12-20" }
   ],
 
   /**
-   * Registration checklists by role. `docs` are KAMHI_DOCS ids; `due` is a dates id.
-   * `action: "submit"` renders the packet submission button.
+   * Registration checklist. `docs` are KAMHI_DOCS ids; `due` is a dates id.
+   * `action`: "rsvp" (Google Form), "pay" (payment portal), "submit" (email packet).
    */
   checklists: [
     {
       id: "coach", label: "Coach / Manager",
       steps: [
-        { title: "Read the invitation & rules", text: "Start here for divisions, eligibility, and how the day works.", docs: ["invitation", "rules"] },
-        { title: "Complete the team application", docs: ["team-app"], due: "apps" },
-        { title: "Complete your tournament roster", text: "Using guest players? Add a guest player form for each one.", docs: ["roster", "guest"], due: "rosters" },
-        { title: "Submit referee information", text: "See the referee plan for what your team needs to provide.", docs: ["ref-form", "ref-plan"], due: "refs" },
-        { title: "Submit your packet", text: "Send all completed forms together.", action: "submit" }
-      ]
-    },
-    {
-      id: "u8", label: "U8 Coach",
-      steps: [
-        { title: "Read the invitation & U8 rules", docs: ["invitation", "u8-rules"] },
-        { title: "Complete the U8 team application", docs: ["u8-app"], due: "apps" },
-        { title: "Complete the U8 team roster", docs: ["u8-roster"], due: "rosters" },
-        { title: "Submit the U8 referee form", docs: ["u8-ref"], due: "refs" },
-        { title: "Submit your packet", text: "Send all completed forms together.", action: "submit" }
-      ]
-    },
-    {
-      id: "referee", label: "Referee",
-      steps: [
-        { title: "Read the referee plan", docs: ["ref-plan", "rules"] },
-        { title: "Complete the referee information form", docs: ["ref-form"], due: "refs" },
-        { title: "Submit your form", text: "Send it to the Referee Administrator.", action: "submit" }
+        { title: "Submit the online RSVP", text: "This starts your application.", action: "rsvp", due: "apps" },
+        { title: "Read the invitation & rules", docs: ["invitation", "rules"] },
+        { title: "Complete the Team Application", text: "Signed by your Head Coach and Regional Commissioner.", docs: ["team-app"], due: "apps" },
+        { title: "Prepare your roster", text: "Signed by your Regional Commissioner (Sports Connect roster accepted). Using guest players? Up to 3, each approved on the Guest Player Form.", docs: ["guest"] },
+        { title: "Pay the $750 entry fee", text: "Payable online through the StackPay portal.", action: "pay" },
+        { title: "Email your application & roster", text: "Teams are notified of their status within 48 hours.", action: "submit", due: "apps" }
       ]
     }
   ],
 
-  /**
-   * Info Hub, organized by the six board pillars.
-   * Mark an answer `tbd: true` while the board is still deciding; it shows a TBD tag.
-   */
+  /** Info Hub by topic. Mark an answer `tbd: true` while the board is still deciding. */
   info: [
     {
       id: "registration", label: "Registration", title: "Registration & Team Coordination", icon: "clipboard",
-      docs: ["invitation", "team-app", "roster", "guest"], contact: "Tournament Director",
+      docs: ["invitation", "team-app", "guest"], contact: "Tournament Director",
       faqs: [
-        { q: "How do we register?", a: "Follow the Registration Checklist above: team application, roster and guest player forms, referee information, then submit your packet." },
-        { q: "Which divisions are offered?", a: "10U, 12U and 14U boys and girls. See Tournament at a Glance for format, half length, and ball size. Full eligibility is in the Tournament Invitation." },
-        { q: "What are the deadlines?", a: "Deadlines will be posted under Key Dates.", tbd: true },
-        { q: "Can we use guest players?", a: "Yes, with a 2026 Guest Player Form for each guest. Limits are set in the tournament rules." },
-        { q: "How are teams ranked in pool play?", a: "Win 6, tie 3, loss 0. Plus 1 for a shutout and 1 per goal scored (up to 3 per match). Minus 2 per red card. Tiebreakers: head-to-head, fewest goals allowed, goal differential (max +/- 3 per game), most shutouts, then kicks from the penalty mark." }
+        { q: "Who can enter?", a: "AYSO All-Star teams from all Sections, Boys & Girls, in U10, U12 and U14. Players must be registered Fall AYSO 2026 players." },
+        { q: "How much is it, and what's the refund policy?", a: "$750 per team, payable online. Withdraw by November 15, 2026 for a full refund. After that, refunds are given only if a replacement team is found. If the tournament is canceled and can't be rescheduled, all teams get a full refund." },
+        { q: "When is the deadline?", a: "Applications are due November 30, 2026. Teams are accepted first-come based on a completed application and are notified within 48 hours. Teams not accepted can join the waiting list." },
+        { q: "What makes an application complete?", a: "The online RSVP, a Team Application signed by the Head Coach and Regional Commissioner, a roster signed by your Regional Commissioner, and the $750 entry fee." },
+        { q: "How many players and guests can we bring?", a: "Roster limits: U10 10 players, U12 12 players, U14 15 players. Up to 3 guest players per team, approved by both the guest's Regional Commissioner and your Regional Commissioner on the Guest Player Form, and listed on your roster." },
+        { q: "Can we change our roster?", a: "Yes, until team check-in, with your Regional Commissioner's written approval. Changes after December 5 must be brought to check-in." }
+      ]
+    },
+    {
+      id: "format", label: "Format & Scoring", title: "Format, Scoring & Awards", icon: "trophy",
+      docs: ["rules"], contact: "Tournament Director",
+      faqs: [
+        { q: "How many games are guaranteed?", a: "Every team plays at least 3 pool play games. Pool winners (and in some cases wildcard teams) advance to the medal round on Sunday afternoon." },
+        { q: "How long are the games?", a: "Pool, quarter and semi-final rounds: U10 20-minute halves, U12 25, U14 30. Championship games are full length: U10 25-minute halves, U12 30, U14 35. Pool play games may end in a tie; medal-round ties go straight to kicks from the mark." },
+        { q: "How are standings scored?", a: "Win 6, tie 3, loss 0. +1 per goal (max 3 per game) and +1 for a shutout, including a 0-0 tie. A forfeit counts as an 8-point 1-0 win. -2 for each red card or ejection, and -1 for 3 yellow cards in a match." },
+        { q: "How are ties in the standings broken?", a: "Head-to-head, then fewest goals allowed (max 3 per game), then most goals for (max 3 per game), then kicks from the mark." },
+        { q: "What are the awards?", a: "Medals for 1st through 4th place in U10, U12 and U14 (no 3rd/4th medals if a division has only 4 teams). Every player and 2 coaches per team receive tournament swag." }
       ]
     },
     {
       id: "referees", label: "Referees", title: "Referees & Game Operations", icon: "whistle",
-      docs: ["ref-plan", "ref-form", "u8-ref"], contact: "Referee Administrator",
+      docs: ["rules"], contact: "Tournament Director",
       faqs: [
-        { q: "Does each team need to provide referees?", a: "Referee requirements per team will be confirmed in the Referee Plan Guidelines.", tbd: true },
-        { q: "How do referees sign up?", a: "Complete the Referee Information Form and include it in your team packet." },
-        { q: "Are there referee point requirements?", a: "Point requirements are being finalized by the board.", tbd: true }
+        { q: "Do we need to bring referees?", a: "No. The tournament provides all referees, and referee fees are included in your entry fee. There is no referee requirement and no referee deposit." },
+        { q: "Can referee decisions be protested?", a: "No. Referee judgment calls are not subject to dispute or protest." },
+        { q: "What do coaches need to bring?", a: "A set of pinnies in case of a color conflict, a first aid kit and ice packs. Each team has two coaches (Head and Assistant), both listed on the official roster, AYSO trained and Safe Haven certified." }
       ]
     },
     {
       id: "fields", label: "Fields", title: "Fields & Facilities", icon: "pin",
       docs: [], contact: "Tournament Director",
       faqs: [
-        { q: "Where are the fields?", a: "In Cypress, CA. Field assignments and a field map will be posted before tournament day.", tbd: true },
-        { q: "Where should we park?", a: "Park only in marked stalls or where posted signs allow. No red-curb parking. Please carpool and drop players at the curb." },
-        { q: "Are canopies allowed?", a: "Yes. Canopies must be weighted or staked, stay back from the touchline and field entrances, and are not allowed in referee or team technical areas." }
+        { q: "Where are the games?", a: "Lexington Junior High School & Lexington Park in Cypress, California." },
+        { q: "Where do we park?", a: "The field layout and parking map are coming soon.", tbd: true },
+        { q: "Are pets allowed?", a: "No pets or animals are allowed at any field. Teams with a pet at the field may be asked to leave or forfeit a game. Smoking is also prohibited." }
       ]
     },
     {
-      id: "safety", label: "Safety", title: "Safety & Medical", icon: "shield",
-      docs: [], contact: "Tournament Director",
+      id: "safety", label: "Safety", title: "Safety, Check-in & Weather", icon: "shield",
+      docs: ["rules"], contact: "Tournament Director",
       faqs: [
-        { q: "How does check-in work?", a: "Arrive at least 60 minutes before your first match at the Field Marshal HQ tent with your official eAYSO roster and player cards." },
-        { q: "Will there be a trainer or first-aid tent?", a: "Medical and first-aid details will be announced.", tbd: true },
-        { q: "What happens in bad weather or poor air quality?", a: "The tournament weather and air-quality policy will be posted here.", tbd: true }
+        { q: "How does check-in work?", a: "Check in 1 hour before your first game on Saturday, December 12, with your RC-signed roster, Medical Release Forms, and 4–6 completed game cards. The check-in location will be emailed within 1 week of the tournament." },
+        { q: "Is there first aid on site?", a: "Yes. There will be a First Aid station at the main tent. For serious injuries, Tournament Staff will call 911." },
+        { q: "What if it rains?", a: "The tournament plays rain or shine when conditions are safe. Rainout dates are December 19–20, 2026, and accepted teams are expected to return on those dates if needed." }
       ]
     },
     {
       id: "volunteers", label: "Volunteers", title: "Volunteers & Staffing", icon: "users",
       docs: [], contact: "Tournament Director",
       faqs: [
-        { q: "How do field marshals check in?", a: "Field marshal check-in details will be shared with volunteers.", tbd: true },
-        { q: "Do volunteers earn credit?", a: "Volunteer point credit rules are being finalized.", tbd: true },
-        { q: "How can I help?", a: "Email the Tournament Director to volunteer." }
-      ]
-    },
-    {
-      id: "concessions", label: "Concessions", title: "Concessions, Fundraising & Vendors", icon: "food",
-      docs: [], contact: "Tournament Director",
-      faqs: [
-        { q: "Will there be food on site?", a: "Food trucks and snack options will be announced.", tbd: true },
-        { q: "Is there tournament merchandise?", a: "Merchandise details will be announced.", tbd: true },
-        { q: "I'm a vendor. How do I take part?", a: "Email the Tournament Director with your business and what you'd offer." }
+        { q: "How can I help?", a: "Fields are set up and taken down by tournament staff and Region 154 teams. Email the Tournament Director to volunteer." },
+        { q: "Is there volunteer credit?", a: "Volunteer details will be announced.", tbd: true }
       ]
     }
   ],
 
-  /** Sponsors. Tier names and perks are placeholders until the board confirms them. */
+  /** Low-profile placeholders for modules the board is still finalizing. */
+  comingSoon: [
+    { id: "schedule", icon: "calendar", title: "Match Schedules & Pool Brackets", pill: "Coming Early December", text: "Schedules are being drawn after the Nov 30 application cutoff and will be published here 1 week prior to kickoff." },
+    { id: "fieldmap", icon: "pin", title: "Field Maps & Parking Guides", pill: "Coming Late November / TBD", text: "Lexington Junior High & Park field layout and parking map coming soon." },
+    { id: "vendors", icon: "food", title: "Concessions & Event Vendors", pill: "Coming Late November / TBD", text: "Food trucks, tournament merchandise, and snack bar details to be announced." }
+  ],
+
   sponsors: {
-    inquiryEmail: "coachadmin154@gmail.com", // TODO: confirm sponsorship contact
-    placeholder: true,
-    tiers: [
-      { id: "champion",  name: "Champion Sponsor",  tone: "gold",   perks: ["Logo on tournament banner and this site", "Recognition at the medal ceremony", "Booth space on tournament day"] },
-      { id: "finalist",  name: "Finalist Sponsor",  tone: "silver", perks: ["Logo on this site", "Name on tournament banner"] },
-      { id: "community", name: "Community Partner", tone: "navy",   perks: ["Name listed on this site", "Thank-you on region social media"] }
-    ],
+    inquiryEmail: "tournamentayso154@gmail.com",
+    text: "The Kamhi Cup is a Region 154 fundraiser supporting the development of soccer fields in the City of Cypress.",
     partners: []                       // { name, logo, url }
   }
 };
 
 /* ==========================================================================
-   1b. DOCUMENT CENTER DATA
+   1b. OFFICIAL DOWNLOADS
    --------------------------------------------------------------------------
-   `file` is relative to KAMHI_DOCS_BASE (encoded automatically when rendered).
-   Categories appear in the order they first show up in this array.
+   `file` is relative to KAMHI_DOCS_BASE (URL-encoded automatically).
    ========================================================================== */
-const KAMHI_DOCS_BASE = "Template Doc Files/";
+const KAMHI_DOCS_BASE = "docs/";
 
 const KAMHI_DOCS = [
-  // A. Tournament Applications & Rosters
-  { id: "team-app", category: "Tournament Applications & Rosters", title: "2026 Team Application",                 desc: "Register your All-Star team for the tournament.",             file: "2026-turkey team application-3.docx" },
-  { id: "roster", category: "Tournament Applications & Rosters", title: "2026 Tournament Roster Form",           desc: "Official team roster to complete and submit.",                file: "2026 -turkey tournament roster.doc" },
-  { id: "guest", category: "Tournament Applications & Rosters", title: "2026 Guest Player Form",                desc: "Request approval to add a guest player to your roster.",      file: "2026 -turkey guest form.docx" },
-  { id: "invitation", category: "Tournament Applications & Rosters", title: "2026 Tournament Invitation & Details",  desc: "Invitation letter with tournament details and logistics.",    file: "2026 -turkey invitation_1.docx" },
-
-  // B. Rules & Guidelines
-  { id: "rules", category: "Rules & Guidelines", title: "2026 Tournament Rules (Revised Final)", desc: "Complete rules, scoring, and tiebreakers for the tournament.", file: "turkey tournament rules 2026 revised final 2.docx" },
-  { id: "u8-rules", category: "Rules & Guidelines", title: "U8 Division Specific Rules",            desc: "Additional rules that apply only to the U8 division.",         file: "u8 division rules - all american turkey tournamnt.doc" },
-
-  // C. Referee Forms & Plans
-  { id: "ref-form", category: "Referee Forms & Plans", title: "2026 Referee Information Form", desc: "Referee contact and availability information.",                file: "2025 -turkey referee form.doc" },
-  { id: "ref-plan", category: "Referee Forms & Plans", title: "Referee Plan Guidelines",       desc: "How referees are assigned and tournament refereeing guidelines.", file: "2025 -turkey referee plan.docx" },
-
-  // D. U8 Division Specific Forms
-  { id: "u8-app", category: "U8 Division Specific Forms", title: "U8 Team Application", desc: "Team application for the U8 division.",   file: "u8 turkey application1.doc" },
-  { id: "u8-roster", category: "U8 Division Specific Forms", title: "U8 Team Roster",      desc: "Roster form for U8 teams.",               file: "u8_turkey_team_roster.doc" },
-  { id: "u8-ref", category: "U8 Division Specific Forms", title: "U8 Referee Form",     desc: "Referee information form for U8 games.",  file: "u8 -turkey referee form.doc" }
+  { id: "invitation", title: "Tournament Invitation & Overview",   desc: "Dates, divisions, format, fees, refunds, and awards.",                  file: "kamhi cup invitation application 2026.pdf", size: "414 KB" },
+  { id: "team-app",   title: "Official Team Application Form",     desc: "Application instructions and the form for your Head Coach and RC to sign.", file: "kamhi cup team application 2026.pdf",       size: "409 KB" },
+  { id: "rules",      title: "Official Tournament Rules & Scoring", desc: "Eligibility, game lengths, standings points, tiebreakers, and conduct.",  file: "kamhi cup rules 2026.pdf",                  size: "164 KB" },
+  { id: "guest",      title: "Guest Player Approval Form",         desc: "Up to 3 guest players, approved by both Regional Commissioners.",          file: "guest_player_form 2026.pdf",                size: "121 KB" }
 ];
 
 /* ==========================================================================
@@ -511,6 +364,9 @@ const KAMHI_DOCS = [
     shield: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/><path d="M12 9v6M9 12h6"/></svg>',
     users: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></svg>',
     food: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M17 3c-2 2-3 4.5-3 7h3v11"/></svg>',
+    external: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+    ball: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m12 7 4 3-1.5 4.5h-5L8 10zM12 7V3.5M16 10l3.5-1.5M14.5 14.5l2 3.5M9.5 14.5l-2 3.5M8 10 4.5 8.5"/></svg>',
+    card: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6 15h4"/></svg>',
     car: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M3 13l2-6h14l2 6v4H3zM7 17v2M17 17v2"/><circle cx="7.5" cy="13.5" r=".8"/><circle cx="16.5" cy="13.5" r=".8"/></svg>'
   };
 
@@ -542,7 +398,7 @@ const KAMHI_DOCS = [
     if (t.statusOverride === "complete") return { key: "complete", label: "Tournament Complete" };
     if (now > end) return { key: "complete", label: "Tournament Complete" };
     if (DATA.games.some((g) => g.status === "live")) return { key: "live", label: "Tournament Live" };
-    return { key: "gameday", label: now < start ? "Game Day Tomorrow" : "Game Day" };
+    return { key: "gameday", label: now < start ? "Kickoff Tomorrow" : "Tournament Weekend" };
   }
 
   function renderStatus() {
@@ -565,7 +421,9 @@ const KAMHI_DOCS = [
         const el = $(`[data-unit="${k}"]`, countdown);
         if (el) el.textContent = String(v).padStart(2, "0");
       });
-      meta.textContent = `${t.dayLong} in Cypress, CA. ${t.kickoffTimeKnown ? `Kickoff ${fmt(start, { hour: "numeric", minute: "2-digit" })}.` : "Kickoff and check-in times TBD."}`;
+      meta.textContent = t.kickoffTimeKnown
+        ? `Kickoff ${fmt(start, { weekday: "long", hour: "numeric", minute: "2-digit" })}. Check in 1 hour before your first game.`
+        : "Until kickoff weekend. Check in 1 hour before your first game; schedules post ~1 week prior.";
     } else {
       countdown.hidden = true;
       const live = DATA.games.filter((g) => g.status === "live").length;
@@ -659,7 +517,9 @@ const KAMHI_DOCS = [
     $("#result-count").textContent = `${games.length} match${games.length === 1 ? "" : "es"}`;
 
     if (!games.length) {
-      host.innerHTML = `<div class="empty">No matches found for this filter. Try another division or status.</div>`;
+      host.innerHTML = DATA.games.length
+        ? `<div class="empty">No matches found for this filter. Try another division or status.</div>`
+        : `<div class="empty">Schedules will be published here 1 week prior to kickoff.</div>`;
       return;
     }
 
@@ -815,6 +675,7 @@ const KAMHI_DOCS = [
         <ol class="check-list check-list--red">${item.tiebreakers.map((i) => `<li>${esc(i)}</li>`).join("")}</ol>${note}`;
     }
     if (item.type === "stations") {
+      if (!DATA.fields.length) return `${intro}<p class="note">Field map and Field Marshal stations will be posted before kickoff.</p>`;
       return `${intro}<div class="station-list">${DATA.fields
         .map(
           (f) => `<div class="station">
@@ -862,61 +723,32 @@ const KAMHI_DOCS = [
     $$(".acc-item .acc-panel__clip").forEach((c) => c.setAttribute("inert", ""));
   }
 
-  /* ---------- Document center ---------- */
+  /* ---------- Official downloads ---------- */
   const docUrl = (file) => KAMHI_DOCS_BASE.split("/").filter(Boolean).concat(file.split("/")).map(encodeURIComponent).join("/");
   const docAbsUrl = (file) => new URL(docUrl(file), document.baseURI).href;
   const docExt = (file) => (file.split(".").pop() || "").toLowerCase();
+  const docById = (id) => KAMHI_DOCS.find((d) => d.id === id);
 
   function renderDocs() {
-    const q = ($("#doc-search").value || "").trim().toLowerCase();
-    const terms = q.split(/\s+/).filter(Boolean);
-    const matches = KAMHI_DOCS.filter((d) => {
-      const hay = `${d.title} ${d.desc} ${d.category} ${docExt(d.file)}`.toLowerCase();
-      return terms.every((t) => hay.includes(t));
-    });
-
-    $("#doc-count").textContent = `${matches.length} of ${KAMHI_DOCS.length} documents`;
-    const host = $("#doc-list");
-    if (!matches.length) {
-      host.innerHTML = `<div class="empty">No documents match &ldquo;${esc(q)}&rdquo;. Try &ldquo;roster&rdquo;, &ldquo;referee&rdquo;, or &ldquo;rules&rdquo;.</div>`;
-      return;
-    }
-
-    const groups = new Map();
-    matches.forEach((d) => {
-      if (!groups.has(d.category)) groups.set(d.category, []);
-      groups.get(d.category).push(d);
-    });
-
-    host.innerHTML = [...groups.entries()]
-      .map(
-        ([cat, list]) => `
-        <div class="doc-group">
-          <h3 class="doc-group__title">${esc(cat)} <span class="doc-group__count">${list.length}</span></h3>
-          <div class="doc-grid">
-            ${list
-              .map((d) => {
-                const ext = docExt(d.file);
-                return `<article class="card doc-card">
-                  <div class="doc-card__top">
-                    <div class="file-icon" data-ext="${esc(ext)}" aria-hidden="true">${esc(ext.toUpperCase())}</div>
-                    <div>
-                      <div class="doc-card__title">${esc(d.title)}</div>
-                      <p class="doc-card__desc">${esc(d.desc)}</p>
-                      <div class="doc-card__badges"><span class="badge badge--ext">${esc(ext.toUpperCase())}</span></div>
-                    </div>
-                  </div>
-                  <div class="doc-card__actions">
-                    <a class="action-btn action-btn--primary" href="${esc(docUrl(d.file))}" download aria-label="Download ${esc(d.title)} (${esc(ext.toUpperCase())})">${ICONS.download}<span>Download</span></a>
-                    <button type="button" class="action-btn action-btn--icon" data-copy="${esc(d.file)}" aria-label="Copy share link for ${esc(d.title)}" title="Copy link">${ICONS.link}</button>
-                  </div>
-                </article>`;
-              })
-              .join("")}
+    $("#doc-list").innerHTML = KAMHI_DOCS.map((d) => {
+      const ext = docExt(d.file).toUpperCase();
+      const href = esc(docUrl(d.file));
+      return `<article class="card pdf-card">
+        <div class="pdf-card__top">
+          <div class="file-icon" data-ext="${esc(ext.toLowerCase())}" aria-hidden="true">${esc(ext)}</div>
+          <div class="pdf-card__info">
+            <h3 class="pdf-card__title">${esc(d.title)}</h3>
+            <p class="pdf-card__desc">${esc(d.desc)}</p>
+            <div class="pdf-card__meta"><span class="badge badge--ext">${esc(ext)}</span><span class="pdf-card__size">${esc(d.size || "")}</span></div>
           </div>
-        </div>`
-      )
-      .join("");
+        </div>
+        <div class="pdf-card__actions">
+          <a class="action-btn action-btn--primary" href="${href}" download aria-label="Download ${esc(d.title)} (${esc(ext)}, ${esc(d.size || "")})">${ICONS.download}<span>Download ${esc(ext)}</span></a>
+          <a class="action-btn" href="${href}" target="_blank" rel="noopener" aria-label="Open ${esc(d.title)} in a new tab">${ICONS.external}<span>Open / View</span></a>
+          <button type="button" class="action-btn action-btn--icon" data-copy="${esc(d.file)}" aria-label="Copy share link for ${esc(d.title)}" title="Copy link">${ICONS.link}</button>
+        </div>
+      </article>`;
+    }).join("");
   }
 
   let toastTimer;
@@ -944,7 +776,7 @@ const KAMHI_DOCS = [
       try { ok = document.execCommand("copy"); } catch { /* ignore */ }
       ta.remove();
       if (!ok) {
-        try { window.prompt("Copy this link:", url); } catch { toast("Couldn't copy. Use Download instead."); }
+        try { window.prompt("Copy this link:", url); } catch { toast("Couldn't copy. Use Open / View instead."); }
         return;
       }
     }
@@ -955,35 +787,43 @@ const KAMHI_DOCS = [
   }
 
   /* ---------- Phase 1: key dates ---------- */
-  const docById = (id) => KAMHI_DOCS.find((d) => d.id === id);
   const dateById = (id) => (DATA.dates || []).find((d) => d.id === id);
   const parseDay = (ymd) => (ymd ? new Date(`${ymd}T12:00:00-08:00`) : null);
   const fmtShort = (ymd) => (ymd ? fmt(parseDay(ymd), { month: "short", day: "numeric" }) : "TBD");
+  const fmtRange = (d) => {
+    if (!d.date) return "TBD";
+    const a = fmtShort(d.date);
+    if (!d.dateEnd) return `${d.approx ? "~" : ""}${a}`;
+    const sameMonth = d.date.slice(0, 7) === d.dateEnd.slice(0, 7);
+    return `${a}–${sameMonth ? Number(d.dateEnd.slice(8)) : fmtShort(d.dateEnd)}`;
+  };
   const daysUntil = (ymd) => {
     const today = fmt(new Date(), { year: "numeric", month: "2-digit", day: "2-digit" }).split("/");
     const todayNoon = new Date(`${today[2]}-${today[0]}-${today[1]}T12:00:00-08:00`);
     return Math.round((parseDay(ymd) - todayNoon) / 86400000);
   };
 
-  function dueText(ymd) {
-    if (!ymd) return "Date TBD";
-    const n = daysUntil(ymd);
-    if (n < 0) return "Passed";
-    if (n === 0) return "Today";
+  function whenText(d) {
+    if (!d.date) return "Date TBD";
+    const n = daysUntil(d.date);
+    const end = d.dateEnd ? daysUntil(d.dateEnd) : n;
+    if (d.openNow && n <= 0) return "Open now";
+    if (end < 0) return "Passed";
+    if (n <= 0) return "Today";
     if (n === 1) return "Tomorrow";
-    return `In ${n} days`;
+    return `${d.approx ? "About " : "In "}${n} days`;
   }
 
   function renderDates() {
     $("#dates-list").innerHTML = (DATA.dates || [])
       .map((d) => {
-        const n = d.date ? daysUntil(d.date) : null;
-        const stateCls = d.date == null || d.date === "" ? "is-tbd" : n < 0 || (n === 0 && !d.highlight) ? "is-past" : "is-upcoming";
-        return `<li class="timeline__item ${stateCls}${d.highlight ? " is-highlight" : ""}">
+        const end = d.date ? daysUntil(d.dateEnd || d.date) : null;
+        const cls = !d.date ? "is-tbd" : d.openNow && daysUntil(d.date) <= 0 ? "is-open" : end < 0 ? "is-past" : "is-upcoming";
+        return `<li class="timeline__item ${cls}${d.highlight ? " is-highlight" : ""}">
           <span class="timeline__dot" aria-hidden="true"></span>
-          <span class="timeline__date">${esc(fmtShort(d.date))}</span>
+          <span class="timeline__date">${esc(fmtRange(d))}</span>
           <span class="timeline__label">${esc(d.label)}</span>
-          <span class="timeline__when">${esc(d.id === "open" && n !== null && n <= 0 ? "Open now" : dueText(d.date))}</span>
+          <span class="timeline__when">${esc(whenText(d))}</span>
         </li>`;
       })
       .join("");
@@ -992,15 +832,10 @@ const KAMHI_DOCS = [
   /* ---------- Phase 1: registration checklist ---------- */
   const checkKey = (role, i) => `kc26:check:${role}:${i}`;
 
-  function submitHref(role) {
+  function submitHref() {
     const r = DATA.registration;
-    if (r.submitUrl) return r.submitUrl;
-    const contact = role === "referee" ? DATA.contacts.find((c) => /referee/i.test(c.role)) : null;
-    const email = (contact && contact.email) || r.submitEmail;
-    const list = DATA.checklists.find((c) => c.id === role);
-    const forms = list.steps.flatMap((s) => s.docs || []).map((id) => docById(id)).filter(Boolean).map((d) => `- ${d.title}`);
-    const body = `Team / name:\nDivision:\n\nAttached forms:\n${forms.join("\n")}\n`;
-    return `mailto:${email}?subject=${encodeURIComponent(`${r.submitSubject} - ${list.label}`)}&body=${encodeURIComponent(body)}`;
+    const body = "Team name:\nRegion #:\nDivision (U10 / U12 / U14, Boys / Girls):\nHead Coach:\n\nAttached:\n- Signed Team Application\n- RC-signed roster\n- Guest Player Forms (if any)\n";
+    return `mailto:${r.submitEmail}?subject=${encodeURIComponent(r.submitSubject)}&body=${encodeURIComponent(body)}`;
   }
 
   function docChip(d) {
@@ -1012,24 +847,42 @@ const KAMHI_DOCS = [
     </a>`;
   }
 
+  function stepAction(s) {
+    const r = DATA.registration;
+    if (r.status === "closed" && s.action) return `<p class="note">Registration is closed.</p>`;
+    if (s.action === "rsvp") {
+      return `<a class="action-btn action-btn--red action-btn--wide" href="${esc(r.rsvpUrl)}" target="_blank" rel="noopener">${ICONS.ball}<span>Open the online RSVP</span>${ICONS.external}</a>`;
+    }
+    if (s.action === "pay") {
+      return r.paymentUrl
+        ? `<a class="action-btn action-btn--wide" href="${esc(r.paymentUrl)}" target="_blank" rel="noopener">${ICONS.card}<span>Pay online</span>${ICONS.external}</a>`
+        : `<p class="step__hint"><span class="badge badge--tbd">Link TBD</span> The payment link will be shared after your RSVP.</p>`;
+    }
+    if (s.action === "submit") {
+      return `<a class="action-btn action-btn--wide" href="${esc(submitHref())}">${ICONS.mail}<span>Email ${esc(r.submitEmail)}</span></a>`;
+    }
+    return "";
+  }
+
   function renderChecklist() {
     const lists = DATA.checklists || [];
     if (!lists.find((l) => l.id === state.role)) state.role = lists[0].id;
     const list = lists.find((l) => l.id === state.role);
 
-    $("#role-chips").innerHTML = lists
+    const chips = $("#role-chips");
+    chips.hidden = lists.length < 2;
+    chips.innerHTML = lists
       .map((l) => `<button type="button" class="pill-btn" data-role="${esc(l.id)}" aria-pressed="${l.id === state.role}">${esc(l.label)}</button>`)
       .join("");
 
     const done = list.steps.map((_, i) => store.get(checkKey(list.id, i)) === "1");
     const count = done.filter(Boolean).length;
     const pct = Math.round((count / list.steps.length) * 100);
-    const closed = DATA.registration.status === "closed";
 
     $("#checklist").innerHTML = `
       <div class="checklist__head">
         <div>
-          <div class="checklist__title">${esc(list.label)} packet</div>
+          <div class="checklist__title">Your team's application</div>
           <div class="checklist__count">${count} of ${list.steps.length} done</div>
         </div>
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${list.steps.length}" aria-valuenow="${count}" aria-label="Checklist progress"><span style="width:${pct}%"></span></div>
@@ -1039,12 +892,6 @@ const KAMHI_DOCS = [
           .map((s, i) => {
             const due = s.due ? dateById(s.due) : null;
             const docs = (s.docs || []).map(docById).filter(Boolean);
-            const action =
-              s.action === "submit"
-                ? closed
-                  ? `<p class="note">Registration is closed.</p>`
-                  : `<a class="action-btn action-btn--red action-btn--wide" href="${esc(submitHref(list.id))}"${DATA.registration.submitUrl ? ' target="_blank" rel="noopener"' : ""}>${ICONS.mail}<span>${DATA.registration.submitUrl ? "Open submission form" : "Email your packet"}</span></a>`
-                : "";
             return `<li class="step${done[i] ? " is-done" : ""}">
               <label class="step__check">
                 <input type="checkbox" data-check="${i}" ${done[i] ? "checked" : ""}>
@@ -1054,12 +901,12 @@ const KAMHI_DOCS = [
               <div class="step__body">
                 <div class="step__top">
                   <span class="step__num">Step ${i + 1}</span>
-                  ${due ? `<span class="badge ${due.date ? "badge--upcoming" : "badge--tbd"}">Due ${esc(fmtShort(due.date))}</span>` : ""}
+                  ${due ? `<span class="badge ${due.date ? "badge--upcoming" : "badge--tbd"}">Due ${esc(fmtRange(due))}</span>` : ""}
                 </div>
                 <div class="step__title">${esc(s.title)}</div>
                 ${s.text ? `<p class="step__text">${esc(s.text)}</p>` : ""}
                 ${docs.length ? `<div class="doc-chips">${docs.map(docChip).join("")}</div>` : ""}
-                ${action}
+                ${stepAction(s)}
               </div>
             </li>`;
           })
@@ -1073,20 +920,20 @@ const KAMHI_DOCS = [
     const groups = new Map();
     DATA.divisions.forEach((d) => {
       const age = d.id.slice(0, 3);
-      if (!groups.has(age)) groups.set(age, { age, list: [] });
-      groups.get(age).list.push(d);
+      if (!groups.has(age)) groups.set(age, []);
+      groups.get(age).push(d);
     });
     $("#glance-grid").innerHTML =
-      [...groups.values()]
-        .map(({ age, list }) => {
+      [...groups.entries()]
+        .map(([age, list]) => {
           const d = list[0];
           return `<article class="card glance-card">
             <div class="glance-card__age">${esc(age)}</div>
-            <div class="glance-card__teams">${list.map((x) => esc(x.label.replace(/^\d+U\s*/, ""))).join(" &amp; ")}</div>
+            <div class="glance-card__teams">${list.map((x) => esc(x.label.replace(/^U\d+\s*/, ""))).join(" &amp; ")}</div>
             <ul class="glance-card__facts">
-              <li><strong>${esc(d.format)}</strong> format</li>
-              <li><strong>${esc(d.halfMins)}-min</strong> halves</li>
-              <li><strong>${esc(d.ball)}</strong> ball</li>
+              <li><strong>${esc(d.format)}</strong> &middot; ${esc(d.roster)} players max</li>
+              <li><strong>${esc(d.poolHalf)}-min</strong> halves in pool play</li>
+              <li><strong>${esc(d.medalHalf)}-min</strong> halves in finals</li>
             </ul>
           </article>`;
         })
@@ -1098,7 +945,7 @@ const KAMHI_DOCS = [
       </article>`;
   }
 
-  /* ---------- Phase 1: Info Hub (six pillars) ---------- */
+  /* ---------- Phase 1: Info Hub ---------- */
   function renderInfo() {
     const pillars = DATA.info || [];
     if (!pillars.find((p) => p.id === state.infoTab)) state.infoTab = pillars[0].id;
@@ -1136,53 +983,61 @@ const KAMHI_DOCS = [
           })
           .join("")}
       </div>
-      ${docs.length ? `<h4 class="info-panel__sub">Related forms</h4><div class="doc-chips">${docs.map(docChip).join("")}</div>` : ""}
+      ${docs.length ? `<h4 class="info-panel__sub">Related downloads</h4><div class="doc-chips">${docs.map(docChip).join("")}</div>` : ""}
       <div class="info-panel__contact">
         <span>Questions? <strong>${esc(contact.role)}</strong></span>
         <a class="action-btn" href="mailto:${esc(contact.email)}?subject=${encodeURIComponent(`Kamhi Cup 2026: ${p.title}`)}">${ICONS.mail}<span>Email</span></a>
       </div>`;
   }
 
-  /* ---------- Phase 1: sponsors ---------- */
-  function renderSponsors() {
+  /* ---------- Phase 1: coming soon + sponsors ---------- */
+  function renderComingSoon() {
     const s = DATA.sponsors;
-    $("#sponsor-tiers").innerHTML = s.tiers
-      .map(
-        (t) => `<article class="card tier-card tier-card--${esc(t.tone)}">
-          <div class="tier-card__name">${esc(t.name)}</div>
-          <ul class="check-list check-list--bullets">${t.perks.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>
-        </article>`
-      )
+    const cards = (DATA.comingSoon || []).map(
+      (c) => `<article class="card soon-card">
+        <div class="soon-card__head">
+          <span class="soon-card__icon">${(ICONS[c.icon] || ICONS.clipboard).replace(/width="\d+" height="\d+"/, 'width="20" height="20"')}</span>
+          <span class="badge badge--soon">${esc(c.pill)}</span>
+        </div>
+        <h3 class="soon-card__title">${esc(c.title)}</h3>
+        <p class="soon-card__text">${esc(c.text)}</p>
+      </article>`
+    );
+    const partners = (s.partners || [])
+      .map((p) => `<a class="partner" href="${esc(p.url || "#")}" target="_blank" rel="noopener">${p.logo ? `<img src="${esc(p.logo)}" alt="${esc(p.name)}" loading="lazy">` : esc(p.name)}</a>`)
       .join("");
-
-    const partners = s.partners && s.partners.length ? s.partners : Array.from({ length: 6 }, () => null);
-    $("#partner-grid").innerHTML = partners
-      .map((p) =>
-        p
-          ? `<a class="partner" href="${esc(p.url || "#")}" target="_blank" rel="noopener">${p.logo ? `<img src="${esc(p.logo)}" alt="${esc(p.name)}" loading="lazy">` : esc(p.name)}</a>`
-          : `<div class="partner partner--empty">Your logo here</div>`
-      )
-      .join("");
-
-    $("#sponsor-note").hidden = !s.placeholder;
-    $("#sponsor-cta").href = `mailto:${s.inquiryEmail}?subject=${encodeURIComponent("Kamhi Cup 2026 Sponsorship Inquiry")}`;
+    cards.push(`<article class="card soon-card soon-card--sponsor">
+      <div class="soon-card__head">
+        <span class="soon-card__icon">${ICONS.star}</span>
+        <span class="badge badge--gold">Tournament Sponsors</span>
+      </div>
+      <h3 class="soon-card__title">Interested in supporting Cypress youth soccer?</h3>
+      <p class="soon-card__text">${esc(s.text)}</p>
+      ${partners ? `<div class="partner-grid">${partners}</div>` : ""}
+      <a class="action-btn action-btn--gold" href="mailto:${esc(s.inquiryEmail)}?subject=${encodeURIComponent("Kamhi Cup 2026 Sponsorship Inquiry")}">${ICONS.mail}<span>Inquire About Sponsorship</span></a>
+    </article>`);
+    $("#soon-grid").innerHTML = cards.join("");
   }
 
   /* ---------- Contacts ---------- */
   function renderContacts() {
-    $("#contact-list").innerHTML = DATA.contacts
-      .map(
-        (c) => `<li class="card contact">
-          <div><div class="contact__role">${esc(c.role)}</div><div class="contact__name">${esc(c.name)}</div></div>
-          <a class="action-btn" href="mailto:${esc(c.email)}" aria-label="Email ${esc(c.role)}">${ICONS.mail}<span>Email</span></a>
-        </li>`
-      )
-      .join("");
+    $("#contact-list").innerHTML =
+      DATA.contacts
+        .map(
+          (c) => `<li class="card contact">
+            <div><div class="contact__role">${esc(c.role)}</div><div class="contact__name">${esc(c.email)}</div></div>
+            <a class="action-btn" href="mailto:${esc(c.email)}" aria-label="Email ${esc(c.role)}">${ICONS.mail}<span>Email</span></a>
+          </li>`
+        )
+        .join("") +
+      (DATA.mailingAddress
+        ? `<li class="card contact"><div><div class="contact__role">Mailing address</div><address class="contact__name">${DATA.mailingAddress.map(esc).join("<br>")}</address></div></li>`
+        : "");
   }
 
   /* ---------- Phase-aware navigation ---------- */
   function navAttrs(item) {
-    return `${item.openDrawer ? ` data-open-drawer="${esc(item.openDrawer)}"` : ""}${item.openDetails ? ` data-open-details="${esc(item.openDetails)}"` : ""}`;
+    return item.openDrawer ? ` data-open-drawer="${esc(item.openDrawer)}"` : "";
   }
 
   function renderNav() {
@@ -1197,8 +1052,7 @@ const KAMHI_DOCS = [
 
   function applyPhase() {
     document.body.dataset.phase = state.phase;
-    const browser = $("#doc-browser");
-    if (browser) browser.open = state.phase === "gameday";
+    $$("[data-rsvp]").forEach((a) => (a.href = DATA.registration.rsvpUrl));
   }
 
   /* ---------- Quick links ---------- */
@@ -1261,6 +1115,9 @@ const KAMHI_DOCS = [
       if (key === "subtitle") el.textContent = t.subtitle;
       if (key === "title") el.textContent = t.title || t.name;
       if (key === "dates") el.textContent = t.dates || "";
+      if (key === "fullName") el.textContent = t.fullName || "";
+      if (key === "venue") el.textContent = t.venue || "";
+      if (key === "city") el.textContent = t.city || "";
       if (key === "host") el.textContent = t.host;
       if (key === "updated") el.textContent = DATA.meta.lastUpdated;
       if (key === "sample") el.hidden = !DATA.meta.isSample;
@@ -1281,7 +1138,7 @@ const KAMHI_DOCS = [
       renderChecklist();
       renderGlance();
       renderInfo();
-      renderSponsors();
+      renderComingSoon();
     } else {
       renderStandingsControls();
       renderDivisionPills();
@@ -1358,11 +1215,6 @@ const KAMHI_DOCS = [
       const opener = e.target.closest("[data-open-drawer]");
       if (opener) toggleDrawer(opener.dataset.openDrawer, true);
 
-      const details = e.target.closest("[data-open-details]");
-      if (details) {
-        const el = document.getElementById(details.dataset.openDetails);
-        if (el) el.open = true;
-      }
     });
 
     document.addEventListener("change", (e) => {
@@ -1385,13 +1237,11 @@ const KAMHI_DOCS = [
       renderStandings();
     });
 
-    $("#doc-search").addEventListener("input", renderDocs);
-
     window.addEventListener("resize", syncStickyHeight);
   }
 
   /* ---------- Remote data sync (Google Sheet / Apps Script) ---------- */
-  const SYNC_KEYS = ["meta", "registration", "contacts", "tournament", "links", "divisions", "fields", "games", "standings", "rules", "dates", "checklists", "info", "sponsors"];
+  const SYNC_KEYS = ["meta", "registration", "contacts", "tournament", "links", "divisions", "fields", "games", "standings", "rules", "dates", "checklists", "info", "comingSoon", "sponsors", "mailingAddress"];
 
   async function syncRemote() {
     const url = DATA.source.endpoint;
@@ -1418,8 +1268,6 @@ const KAMHI_DOCS = [
     bindEvents();
     startStatusLoop();
     initScrollSpy();
-    // Opening a link to #documents should also expand the file browser.
-    if (location.hash === "#documents") $("#doc-browser").open = true;
     syncStickyHeight();
     if ("ResizeObserver" in window) new ResizeObserver(syncStickyHeight).observe($("#sticky-bar"));
 

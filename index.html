@@ -14,8 +14,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0a1d37">
-  <meta name="description" content="The Kamhi Cup 2026 All-Stars Tournament, Saturday, December 12, 2026 in Cypress, CA. Register your team, download forms, and get answers.">
-  <title>The Kamhi Cup 2026 | AYSO Region 154 Cypress All-Stars</title>
+  <meta name="description" content="2026 1st Annual Cypress Kamhi Cup All-Star Invitational, Dec 12–13, 2026 at Lexington Junior High & Lexington Park, Cypress, CA. U10–U14, $750 per team, all referees provided. Apply by Nov 30.">
+  <title>The Kamhi Cup 2026 | AYSO Region 154 Cypress All-Star Invitational</title>
   <link rel="icon" type="image/png" href="crest.png">
   <link rel="preload" as="image" href="crest.png">
   <link rel="stylesheet" href="css/styles.css">
@@ -23,10 +23,10 @@
 <body data-phase="registration">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ===================== HERO (both phases) ===================== -->
+  <!-- ===================== HERO ===================== -->
   <header class="hero">
     <div class="hero__ribbon">
-      <p class="hero__eyebrow">AYSO Region 154 Cypress &bull; All-Stars</p>
+      <p class="hero__eyebrow">AYSO Region 154 Cypress &bull; 1st Annual All-Star Invitational</p>
     </div>
 
     <div class="container hero__inner">
@@ -35,8 +35,9 @@
              alt="The Kamhi Cup 2026 crest, Cypress Region 154 All Stars">
         <div class="hero__text">
           <h1 class="hero__title" data-bind="title">The Kamhi Cup 2026</h1>
+          <p class="hero__subtitle" data-bind="fullName">2026 1st Annual Cypress Kamhi Cup All-Star Invitational</p>
           <div class="hero__meta">
-            <span class="meta-pill" data-bind="dates">Sat, Dec 12, 2026 &bull; Cypress, CA</span>
+            <span class="meta-pill" data-bind="dates">Sat–Sun, Dec 12–13, 2026</span>
             <span id="status-badge" class="status-badge" data-phase="open" aria-live="polite">
               <span class="dot"></span><span class="status-badge__text">Registration Open</span>
             </span>
@@ -44,21 +45,39 @@
         </div>
       </div>
 
+      <!-- VIP callout -->
+      <p class="ref-banner">
+        <span class="ref-banner__icon" aria-hidden="true">&#128293;</span>
+        <span><strong>ALL REFEREES PROVIDED</strong> &mdash; No referee requirement &amp; zero referee deposit! Sit back, coach, and enjoy the games.</span>
+      </p>
+
       <div class="hero__side">
-        <div id="countdown" class="countdown" hidden role="timer" aria-label="Time until tournament day">
+        <p class="hero__venue">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span><span data-bind="venue">Lexington Junior High School &amp; Lexington Park</span>, <span data-bind="city">Cypress, CA</span></span>
+        </p>
+
+        <!-- Phase 1 calls to action -->
+        <div class="hero-ctas" data-phase="registration">
+          <a class="pill-btn pill-btn--cta" data-rsvp href="#register" target="_blank" rel="noopener">
+            <span aria-hidden="true">&#9917;</span> Register Your Team (Online RSVP) <span aria-hidden="true">&#10132;</span>
+          </a>
+          <a class="pill-btn" href="#documents">Download forms</a>
+          <a class="pill-btn" href="#info">FAQ</a>
+        </div>
+        <ul class="fee-strip" data-phase="registration" aria-label="Entry details">
+          <li><strong>$750</strong> per team</li>
+          <li>Apply by <strong>Nov 30</strong></li>
+          <li>Full refund until <strong>Nov 15</strong></li>
+        </ul>
+
+        <div id="countdown" class="countdown" hidden role="timer" aria-label="Time until tournament weekend">
           <div class="countdown__unit"><span class="countdown__num" data-unit="days">00</span><span class="countdown__lbl">Days</span></div>
           <div class="countdown__unit"><span class="countdown__num" data-unit="hours">00</span><span class="countdown__lbl">Hours</span></div>
           <div class="countdown__unit"><span class="countdown__num" data-unit="mins">00</span><span class="countdown__lbl">Mins</span></div>
           <div class="countdown__unit"><span class="countdown__num" data-unit="secs">00</span><span class="countdown__lbl">Secs</span></div>
         </div>
         <p id="status-meta" class="status-card__meta"></p>
-
-        <!-- Phase 1 calls to action -->
-        <nav class="hero-ctas" data-phase="registration" aria-label="Get started">
-          <a class="pill-btn pill-btn--cta" href="#register">Register your team <span aria-hidden="true">&rarr;</span></a>
-          <a class="pill-btn" href="#documents" data-open-details="doc-browser">Download forms</a>
-          <a class="pill-btn" href="#info">FAQ</a>
-        </nav>
 
         <!-- Phase 2 quick links -->
         <nav class="quick-links" data-phase="gameday" aria-label="Quick links">
@@ -85,7 +104,7 @@
 
   <main id="main" class="main">
 
-    <!-- ========== PHASE 1: KEY DATES ========== -->
+    <!-- ========== KEY DATES ========== -->
     <section id="dates" class="section section--tight" data-phase="registration" aria-labelledby="dates-title">
       <div class="container">
         <h2 id="dates-title" class="section__title section__title--sm">Key Dates</h2>
@@ -93,13 +112,13 @@
       </div>
     </section>
 
-    <!-- ========== PHASE 1: REGISTRATION CHECKLIST ========== -->
+    <!-- ========== REGISTRATION CHECKLIST ========== -->
     <section id="register" class="section" data-phase="registration" aria-labelledby="register-title">
       <div class="container">
         <div class="section__head">
           <div>
-            <h2 id="register-title" class="section__title">Register in a Few Steps</h2>
-            <p class="section__sub">Pick your role, download each form, check it off, then submit your packet.</p>
+            <h2 id="register-title" class="section__title">How to Register</h2>
+            <p class="section__sub">Six steps to a complete application. Applications are accepted first-come, so don't wait for the Nov 30 deadline.</p>
           </div>
         </div>
         <div id="role-chips" class="role-chips" role="group" aria-label="I am a"></div>
@@ -107,52 +126,52 @@
       </div>
     </section>
 
-    <!-- ========== BOTH: ALL FILES (collapsed in Phase 1) ========== -->
-    <section id="documents" class="section section--tight" aria-label="All tournament files">
+    <!-- ========== OFFICIAL DOWNLOADS (both phases) ========== -->
+    <section id="documents" class="section" aria-labelledby="documents-title">
       <div class="container">
-        <details id="doc-browser" class="card doc-browser">
-          <summary class="doc-browser__summary">
-            <span class="doc-browser__icon" aria-hidden="true">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/></svg>
-            </span>
-            <span class="doc-browser__label">Browse all tournament files</span>
-            <span id="doc-count" class="doc-browser__count" aria-live="polite"></span>
-            <svg class="doc-browser__chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="doc-browser__body">
-            <div class="toolbar">
-              <label class="search">
-                <span class="visually-hidden">Filter documents</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                <input id="doc-search" class="search__input" type="search" placeholder="Filter forms: roster, referee, rules..." autocomplete="off" enterkeyhint="search">
-              </label>
-            </div>
-            <div id="doc-list"></div>
+        <div class="section__head">
+          <div>
+            <h2 id="documents-title" class="section__title">Official Tournament Downloads</h2>
+            <p class="section__sub">The four official 2026 documents. Download to fill out, or open to read in your browser.</p>
           </div>
-        </details>
+        </div>
+        <div id="doc-list" class="pdf-grid"></div>
       </div>
     </section>
 
-    <!-- ========== PHASE 1: TOURNAMENT AT A GLANCE ========== -->
+    <!-- ========== TOURNAMENT AT A GLANCE ========== -->
     <section id="glance" class="section" data-phase="registration" aria-labelledby="glance-title">
       <div class="container">
         <div class="section__head">
           <div>
             <h2 id="glance-title" class="section__title">Tournament at a Glance</h2>
-            <p class="section__sub">One day of All-Star soccer: pool play in the morning, division finals in the afternoon.</p>
+            <p class="section__sub">Boys &amp; Girls divisions. Every team is guaranteed 3 pool play games; the medal round is Sunday afternoon.</p>
           </div>
         </div>
         <div id="glance-grid" class="glance-grid"></div>
       </div>
     </section>
 
-    <!-- ========== PHASE 1: INFO HUB / FAQ ========== -->
+    <!-- ========== COMING SOON / TBD ========== -->
+    <section id="coming-soon" class="section" data-phase="registration" aria-labelledby="soon-title">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 id="soon-title" class="section__title">Coming Soon</h2>
+            <p class="section__sub">The board is finalizing these. Check back after the application deadline.</p>
+          </div>
+        </div>
+        <div id="soon-grid" class="soon-grid"></div>
+      </div>
+    </section>
+
+    <!-- ========== INFO HUB / FAQ ========== -->
     <section id="info" class="section" data-phase="registration" aria-labelledby="info-title">
       <div class="container">
         <div class="section__head">
           <div>
             <h2 id="info-title" class="section__title">Info Hub &amp; FAQ</h2>
-            <p class="section__sub">Answers organized by topic. Items marked TBD are still being finalized by the board.</p>
+            <p class="section__sub">Answers from the official invitation and rules. Items marked TBD are still being finalized.</p>
           </div>
         </div>
         <div id="info-tabs" class="info-tabs" role="tablist" aria-label="Topics"></div>
@@ -188,7 +207,7 @@
         <div class="section__head">
           <div>
             <h2 id="standings-title" class="section__title">Pool Play Standings</h2>
-            <p class="section__sub">Switch pools to see who is on track for the finals.</p>
+            <p class="section__sub">Switch pools to see who is on track for the medal round.</p>
           </div>
         </div>
         <div class="toolbar">
@@ -211,35 +230,20 @@
         <div class="section__head">
           <div>
             <h2 id="rules-title" class="section__title">Rules &amp; Field Map</h2>
-            <p class="section__sub">Check-in, scoring, Field Marshal stations, and parking. Tap a drawer to expand.</p>
+            <p class="section__sub">Check-in, scoring, field map, and facility rules. Tap a drawer to expand.</p>
           </div>
         </div>
         <div id="rules-accordion" class="accordion"></div>
       </div>
     </section>
 
-    <!-- ========== PHASE 1: SPONSORS ========== -->
-    <section id="sponsors" class="section" data-phase="registration" aria-labelledby="sponsors-title">
-      <div class="container">
-        <div class="section__head">
-          <div>
-            <h2 id="sponsors-title" class="section__title">Tournament Sponsors &amp; Community Partners</h2>
-            <p class="section__sub">Local businesses make the Kamhi Cup possible. Put your name in front of hundreds of Cypress soccer families.</p>
-          </div>
-        </div>
-        <div id="sponsor-tiers" class="tier-grid"></div>
-        <p id="sponsor-note" class="note">Sponsor tiers and perks shown here are placeholders until the board confirms them.</p>
-        <div id="partner-grid" class="partner-grid" aria-label="Partners"></div>
-        <a id="sponsor-cta" class="pill-btn pill-btn--cta sponsor-cta" href="#contact">Become a Sponsor / Inquire</a>
-      </div>
-    </section>
-
-    <!-- ========== BOTH: CONTACT ========== -->
+    <!-- ========== CONTACT (both phases) ========== -->
     <section id="contact" class="section" aria-labelledby="contact-title">
       <div class="container">
         <div class="section__head">
           <div>
             <h2 id="contact-title" class="section__title">Contact the Tournament</h2>
+            <p class="section__sub">Email is the main way we communicate with teams.</p>
           </div>
         </div>
         <ul id="contact-list" class="contact-list"></ul>
@@ -251,7 +255,7 @@
     <div class="container footer__inner">
       <span><strong data-bind="name">Kamhi Cup 2026</strong> &middot; <span data-bind="host">AYSO Region 154 Cypress</span></span>
       <span>
-        <span class="sample-tag" data-bind="sample" data-phase="gameday">Sample data &middot; </span>
+        <span class="sample-tag" data-bind="sample">Sample data &middot; </span>
         Updated <span data-bind="updated"></span>
       </span>
     </div>
