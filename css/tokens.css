@@ -1,0 +1,211 @@
+/**
+ * ============================================================================
+ * FILE: css/tokens.css
+ * PROJECT: AYSO Region 154 Cypress - Kamhi Cup 2026 All-Stars Hub
+ * REPOSITORY: https://github.com/webmasterayso154/Kamhi_Cup
+ * AUTHOR: Bryan Nim (Webmaster & Tech Ops Lead | AYSO Region 154 Cypress)
+ * ============================================================================
+ * VERSION CONTROL & REVISION HISTORY:
+ * - v0.1.0 | 2026-11-09 16:59 PST | Initial Draft: Extracted raw hex/RGB values 
+ *   from Kamhi Cup 2026 physical medal, pin, coin, and ribbon proofs.
+ * - v0.2.0 | 2026-11-09 16:59 PST | Architectural Upgrade: Built 3-tier 
+ *   cascading CSS custom property hierarchy (Primitive -> Semantic -> Component)
+ *   so single-line parent edits automatically propagate to all child UI elements.
+ *   Scoped to .kc-root to prevent SportsConnect CMS / Bootstrap style bleed.
+ * ============================================================================
+ */
+
+:root,
+.kc-root {
+  /* ==========================================================================
+   * TIER 1: PRIMITIVE COLOR TOKENS (EXTRACTED FROM KAMHI CUP 2026 ARTWORK)
+   * Modify these base hex values ONLY if the physical artwork palette changes.
+   * ========================================================================== */
+
+  /* Champion Navy Family (Ribbon Base & Inner Medal Dial) */
+  --kc-prim-navy-900: #06142e;   /* Deepest midnight fold shadow */
+  --kc-prim-navy-800: #0b224e;   /* Primary Champion Ribbon & Medal Center */
+  --kc-prim-navy-700: #0e2b61;   /* Elevated card surface navy */
+  --kc-prim-navy-600: #163673;   /* Interactive hover navy */
+  --kc-prim-navy-500: #224b96;   /* Muted border navy */
+
+  /* Finalist Crimson Family (Finalist Ribbon & Outer Medal Ring) */
+  --kc-prim-red-900: #660a16;    /* Deep ribbon crease red */
+  --kc-prim-red-800: #850f1e;    /* Button active / pressed state */
+  --kc-prim-red-700: #a31628;    /* Primary Finalist Ribbon & Outer Ring */
+  --kc-prim-red-600: #c41e33;    /* High-visibility hover state */
+  --kc-prim-red-500: #e03b50;    /* Alert / live indicator accent */
+
+  /* Trophy Gold Family (Champion Medal Bezel, Cup, & Laurel Wreaths) */
+  --kc-prim-gold-900: #523407;   /* Deepest coin stamping recess */
+  --kc-prim-gold-800: #784e0e;   /* Trophy engraving shadow */
+  --kc-prim-gold-600: #b88519;   /* Antique gold mid-tone */
+  --kc-prim-gold-500: #dda629;   /* Primary Trophy Gold & Ribbon Text */
+  --kc-prim-gold-300: #f3c95c;   /* Bright metallic edge */
+  --kc-prim-gold-100: #fde48c;   /* Specular highlight on cup & rim */
+
+  /* Glacier Ice Blue Family (Mountain Peaks & Snowflake Back-Glow) */
+  --kc-prim-ice-800: #1a5c85;    /* Deep mountain shadow blue */
+  --kc-prim-ice-600: #2986bd;    /* Secondary button / tab border */
+  --kc-prim-ice-500: #3ba7e3;    /* Primary Mountain Peak & Glow Blue */
+  --kc-prim-ice-300: #6bc2f0;    /* Interactive link / hover ice blue */
+  --kc-prim-ice-100: #d6f0fe;    /* Frost tint for subtle badges */
+
+  /* Finalist Silver Family (2nd Place Medal Bezel, Trophy, & Wreaths) */
+  --kc-prim-silver-800: #5c6570; /* Deep pewter recess */
+  --kc-prim-silver-700: #8a94a0; /* Metallic shadow silver */
+  --kc-prim-silver-500: #c4cbd2; /* Primary Finalist Medal Silver */
+  --kc-prim-silver-300: #dee3e8; /* Brushed silver highlight */
+  --kc-prim-silver-100: #eef1f4; /* Crisp silver-white surface */
+
+  /* Pitch & Frost Neutrals (Soccer Ball & Typography) */
+  --kc-prim-white: #ffffff;      /* Pure frost white (Snowflakes & text) */
+  --kc-prim-charcoal: #12161d;   /* Soccer ball pentagons & deep shadow */
+  --kc-prim-slate-400: #94a3b8;  /* Muted helper text */
+  --kc-prim-slate-700: #334155;  /* Subtle divider line */
+
+  /* Alpha / Glow Channels (For shadows, glassmorphism, and state rings) */
+  --kc-alpha-gold-glow: rgba(221, 166, 41, 0.32);
+  --kc-alpha-gold-border: rgba(221, 166, 41, 0.35);
+  --kc-alpha-red-glow: rgba(163, 22, 40, 0.38);
+  --kc-alpha-ice-glow: rgba(59, 167, 227, 0.28);
+  --kc-alpha-ice-tint: rgba(59, 167, 227, 0.12);
+  --kc-alpha-navy-glass: rgba(11, 34, 78, 0.88);
+  --kc-alpha-dark-overlay: rgba(6, 20, 46, 0.75);
+
+
+  /* ==========================================================================
+   * TIER 2: SEMANTIC THEME TOKENS (PARENT-LEVEL CONTROLS)
+   * Change a reference here to re-theme the entire site instantaneously.
+   * All child components in Tier 3 inherit strictly from Tier 2.
+   * ========================================================================== */
+
+  /* Backgrounds & Surfaces */
+  --kc-bg-canvas: var(--kc-prim-navy-900);
+  --kc-bg-surface-primary: var(--kc-prim-navy-800);
+  --kc-bg-surface-elevated: var(--kc-prim-navy-700);
+  --kc-bg-surface-interactive: var(--kc-prim-navy-600);
+  --kc-bg-surface-light: var(--kc-prim-silver-100);
+  --kc-bg-glass: var(--kc-alpha-navy-glass);
+
+  /* Brand & Action Intents */
+  --kc-brand-primary: var(--kc-prim-navy-800);
+  --kc-brand-secondary: var(--kc-prim-ice-500);
+  --kc-action-primary: var(--kc-prim-red-700);
+  --kc-action-primary-hover: var(--kc-prim-red-600);
+  --kc-action-primary-active: var(--kc-prim-red-800);
+  --kc-accent-champion: var(--kc-prim-gold-500);
+  --kc-accent-champion-light: var(--kc-prim-gold-100);
+  --kc-accent-finalist: var(--kc-prim-silver-500);
+
+  /* Status & Tournament State Colors */
+  --kc-status-tbd-bg: rgba(253, 228, 140, 0.14);
+  --kc-status-tbd-text: var(--kc-prim-gold-100);
+  --kc-status-tbd-border: var(--kc-prim-gold-500);
+  --kc-status-live-bg: rgba(163, 22, 40, 0.25);
+  --kc-status-live-text: #ff8a98;
+  --kc-status-live-border: var(--kc-prim-red-500);
+  --kc-status-confirmed-bg: rgba(59, 167, 227, 0.18);
+  --kc-status-confirmed-text: var(--kc-prim-ice-100);
+  --kc-status-confirmed-border: var(--kc-prim-ice-500);
+
+  /* Typography Colors */
+  --kc-text-primary: var(--kc-prim-white);
+  --kc-text-secondary: var(--kc-prim-silver-500);
+  --kc-text-muted: var(--kc-prim-slate-400);
+  --kc-text-accent-gold: var(--kc-prim-gold-500);
+  --kc-text-accent-ice: var(--kc-prim-ice-300);
+  --kc-text-on-gold: var(--kc-prim-navy-900);
+  --kc-text-on-silver: var(--kc-prim-charcoal);
+  --kc-text-on-light: var(--kc-prim-navy-900);
+
+  /* Borders & Dividers */
+  --kc-border-subtle: rgba(196, 203, 210, 0.16);
+  --kc-border-ice: rgba(59, 167, 227, 0.4);
+  --kc-border-gold: var(--kc-alpha-gold-border);
+  --kc-border-red: rgba(163, 22, 40, 0.55);
+
+  /* Metallic & Atmospheric Gradients */
+  --kc-grad-hero-bg: linear-gradient(
+    180deg,
+    var(--kc-prim-navy-800) 0%,
+    var(--kc-prim-navy-900) 100%
+  );
+  --kc-grad-champion-gold: linear-gradient(
+    135deg,
+    var(--kc-prim-gold-100) 0%,
+    var(--kc-prim-gold-500) 52%,
+    var(--kc-prim-gold-800) 100%
+  );
+  --kc-grad-finalist-silver: linear-gradient(
+    135deg,
+    var(--kc-prim-white) 0%,
+    var(--kc-prim-silver-500) 52%,
+    var(--kc-prim-silver-700) 100%
+  );
+  --kc-grad-finalist-crimson: linear-gradient(
+    135deg,
+    var(--kc-prim-red-600) 0%,
+    var(--kc-prim-red-700) 60%,
+    var(--kc-prim-red-900) 100%
+  );
+  --kc-grad-glacier-sheen: linear-gradient(
+    180deg,
+    var(--kc-alpha-ice-tint) 0%,
+    rgba(11, 34, 78, 0) 100%
+  );
+
+
+  /* ==========================================================================
+   * TIER 3: COMPONENT-LEVEL TOKENS (CHILD ELEMENTS)
+   * Automatically inherit from Tier 2. Override individual components here
+   * without breaking the rest of the page.
+   * ========================================================================== */
+
+  /* Layout & Spacing Scale */
+  --kc-layout-max-width: 1180px;
+  --kc-space-2xs: 0.25rem;  /* 4px */
+  --kc-space-xs: 0.5rem;    /* 8px */
+  --kc-space-sm: 0.75rem;   /* 12px */
+  --kc-space-md: 1rem;      /* 16px */
+  --kc-space-lg: 1.5rem;    /* 24px */
+  --kc-space-xl: 2rem;      /* 32px */
+  --kc-space-2xl: 3rem;     /* 48px */
+
+  /* Typography Scale & Font Stacks */
+  --kc-font-display: 'Impact', 'Oswald', 'Montserrat', 'Arial Black', sans-serif;
+  --kc-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --kc-font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+
+  --kc-text-xs: 0.75rem;
+  --kc-text-sm: 0.875rem;
+  --kc-text-base: 1rem;
+  --kc-text-lg: 1.125rem;
+  --kc-text-xl: 1.35rem;
+  --kc-text-2xl: 1.75rem;
+  --kc-text-hero: clamp(2.25rem, 5vw, 3.5rem);
+
+  /* Border Radius & Elevation */
+  --kc-radius-xs: 4px;
+  --kc-radius-sm: 8px;
+  --kc-radius-md: 12px;
+  --kc-radius-lg: 16px;
+  --kc-radius-pill: 9999px;
+
+  --kc-shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --kc-shadow-gold-glow: 0 0 18px var(--kc-alpha-gold-glow);
+  --kc-shadow-red-glow: 0 4px 16px var(--kc-alpha-red-glow);
+  --kc-shadow-ice-glow: 0 0 14px var(--kc-alpha-ice-glow);
+  --kc-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --kc-transition-base: 240ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Child Component Bindings */
+  --kc-comp-header-bg: var(--kc-grad-hero-bg);
+  --kc-comp-header-border: var(--kc-border-gold);
+  --kc-comp-card-bg: var(--kc-bg-surface-elevated);
+  --kc-comp-card-border: var(--kc-border-subtle);
+  --kc-comp-card-hover-border: var(--kc-border-gold);
+  --kc-comp-table-header-bg: var(--kc-prim-navy-900);
+  --kc-comp-table-row-even: rgba(255, 255, 255, 0.03);
+  --kc-comp-table-row-hover: var(--kc-alpha-ice-tint);
+}
