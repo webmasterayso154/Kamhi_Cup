@@ -242,6 +242,35 @@ const KAMHI_CUP_DATA = {
 };
 
 /* ==========================================================================
+   1b. DOCUMENT CENTER DATA
+   --------------------------------------------------------------------------
+   `file` is relative to KAMHI_DOCS_BASE (encoded automatically when rendered).
+   Categories appear in the order they first show up in this array.
+   ========================================================================== */
+const KAMHI_DOCS_BASE = "Template Doc Files/";
+
+const KAMHI_DOCS = [
+  // A. Tournament Applications & Rosters
+  { category: "Tournament Applications & Rosters", title: "2026 Team Application",                 desc: "Register your All-Star team for the tournament.",             file: "2026-turkey team application-3.docx" },
+  { category: "Tournament Applications & Rosters", title: "2026 Tournament Roster Form",           desc: "Official team roster to complete and submit.",                file: "2026 -turkey tournament roster.doc" },
+  { category: "Tournament Applications & Rosters", title: "2026 Guest Player Form",                desc: "Request approval to add a guest player to your roster.",      file: "2026 -turkey guest form.docx" },
+  { category: "Tournament Applications & Rosters", title: "2026 Tournament Invitation & Details",  desc: "Invitation letter with tournament details and logistics.",    file: "2026 -turkey invitation_1.docx" },
+
+  // B. Rules & Guidelines
+  { category: "Rules & Guidelines", title: "2026 Tournament Rules (Revised Final)", desc: "Complete rules, scoring, and tiebreakers for the tournament.", file: "turkey tournament rules 2026 revised final 2.docx" },
+  { category: "Rules & Guidelines", title: "U8 Division Specific Rules",            desc: "Additional rules that apply only to the U8 division.",         file: "u8 division rules - all american turkey tournamnt.doc" },
+
+  // C. Referee Forms & Plans
+  { category: "Referee Forms & Plans", title: "2026 Referee Information Form", desc: "Referee contact and availability information.",                file: "2025 -turkey referee form.doc" },
+  { category: "Referee Forms & Plans", title: "Referee Plan Guidelines",       desc: "How referees are assigned and tournament refereeing guidelines.", file: "2025 -turkey referee plan.docx" },
+
+  // D. U8 Division Specific Forms
+  { category: "U8 Division Specific Forms", title: "U8 Team Application", desc: "Team application for the U8 division.",   file: "u8 turkey application1.doc" },
+  { category: "U8 Division Specific Forms", title: "U8 Team Roster",      desc: "Roster form for U8 teams.",               file: "u8_turkey_team_roster.doc" },
+  { category: "U8 Division Specific Forms", title: "U8 Referee Form",     desc: "Referee information form for U8 games.",  file: "u8 -turkey referee form.doc" }
+];
+
+/* ==========================================================================
    2. APP
    ========================================================================== */
 (() => {
@@ -281,6 +310,9 @@ const KAMHI_CUP_DATA = {
     chevron: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
     clipboard: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 2h6v4H9zM9 12l2 2 4-4"/></svg>',
     trophy: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"/></svg>',
+    download: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>',
+    link: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
+    check: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>',
     car: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M3 13l2-6h14l2 6v4H3zM7 17v2M17 17v2"/><circle cx="7.5" cy="13.5" r=".8"/><circle cx="16.5" cy="13.5" r=".8"/></svg>'
   };
 
@@ -625,6 +657,98 @@ const KAMHI_CUP_DATA = {
     $$(".acc-item .acc-panel__clip").forEach((c) => c.setAttribute("inert", ""));
   }
 
+  /* ---------- Document center ---------- */
+  const docUrl = (file) => KAMHI_DOCS_BASE.split("/").filter(Boolean).concat(file.split("/")).map(encodeURIComponent).join("/");
+  const docAbsUrl = (file) => new URL(docUrl(file), document.baseURI).href;
+  const docExt = (file) => (file.split(".").pop() || "").toLowerCase();
+
+  function renderDocs() {
+    const q = ($("#doc-search").value || "").trim().toLowerCase();
+    const terms = q.split(/\s+/).filter(Boolean);
+    const matches = KAMHI_DOCS.filter((d) => {
+      const hay = `${d.title} ${d.desc} ${d.category} ${docExt(d.file)}`.toLowerCase();
+      return terms.every((t) => hay.includes(t));
+    });
+
+    $("#doc-count").textContent = `${matches.length} of ${KAMHI_DOCS.length} documents`;
+    const host = $("#doc-list");
+    if (!matches.length) {
+      host.innerHTML = `<div class="empty">No documents match &ldquo;${esc(q)}&rdquo;. Try &ldquo;roster&rdquo;, &ldquo;referee&rdquo;, or &ldquo;rules&rdquo;.</div>`;
+      return;
+    }
+
+    const groups = new Map();
+    matches.forEach((d) => {
+      if (!groups.has(d.category)) groups.set(d.category, []);
+      groups.get(d.category).push(d);
+    });
+
+    host.innerHTML = [...groups.entries()]
+      .map(
+        ([cat, list]) => `
+        <div class="doc-group">
+          <h3 class="doc-group__title">${esc(cat)} <span class="doc-group__count">${list.length}</span></h3>
+          <div class="doc-grid">
+            ${list
+              .map((d) => {
+                const ext = docExt(d.file);
+                return `<article class="card doc-card">
+                  <div class="doc-card__top">
+                    <div class="file-icon" data-ext="${esc(ext)}" aria-hidden="true">${esc(ext.toUpperCase())}</div>
+                    <div>
+                      <div class="doc-card__title">${esc(d.title)}</div>
+                      <p class="doc-card__desc">${esc(d.desc)}</p>
+                      <div class="doc-card__badges"><span class="badge badge--ext">${esc(ext.toUpperCase())}</span></div>
+                    </div>
+                  </div>
+                  <div class="doc-card__actions">
+                    <a class="action-btn action-btn--primary" href="${esc(docUrl(d.file))}" download aria-label="Download ${esc(d.title)} (${esc(ext.toUpperCase())})">${ICONS.download}<span>Download</span></a>
+                    <button type="button" class="action-btn action-btn--icon" data-copy="${esc(d.file)}" aria-label="Copy share link for ${esc(d.title)}" title="Copy link">${ICONS.link}</button>
+                  </div>
+                </article>`;
+              })
+              .join("")}
+          </div>
+        </div>`
+      )
+      .join("");
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const el = $("#toast");
+    el.textContent = msg;
+    el.classList.add("is-visible");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("is-visible"), 2200);
+  }
+
+  async function copyLink(file, btn) {
+    const url = docAbsUrl(file);
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // Fallback for http:// or older browsers.
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.setAttribute("readonly", "");
+      ta.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch { /* ignore */ }
+      ta.remove();
+      if (!ok) {
+        try { window.prompt("Copy this link:", url); } catch { toast("Couldn't copy. Use Download instead."); }
+        return;
+      }
+    }
+    btn.classList.add("is-done");
+    btn.innerHTML = ICONS.check;
+    toast("Link copied");
+    setTimeout(() => { btn.classList.remove("is-done"); btn.innerHTML = ICONS.link; }, 1800);
+  }
+
   /* ---------- Quick links ---------- */
   function wireQuickLinks() {
     const { links } = DATA;
@@ -659,7 +783,7 @@ const KAMHI_CUP_DATA = {
   }
 
   function initScrollSpy() {
-    const links = $$(".section-nav__link");
+    const links = $$(".section-nav__link, .fab-nav__link");
     const sections = links.map((l) => $(l.getAttribute("href"))).filter(Boolean);
     if (!("IntersectionObserver" in window)) return;
     const io = new IntersectionObserver(
@@ -696,6 +820,7 @@ const KAMHI_CUP_DATA = {
     renderDivisionPills();
     renderSchedule();
     renderStandings();
+    renderDocs();
     renderRules();
     initDrawers();
     renderStatus();
@@ -736,6 +861,12 @@ const KAMHI_CUP_DATA = {
         return;
       }
 
+      const copy = e.target.closest("[data-copy]");
+      if (copy) {
+        copyLink(copy.dataset.copy, copy);
+        return;
+      }
+
       const trigger = e.target.closest(".acc-trigger");
       if (trigger) {
         toggleDrawer(trigger.closest(".acc-item").dataset.acc);
@@ -758,6 +889,8 @@ const KAMHI_CUP_DATA = {
       }
       renderStandings();
     });
+
+    $("#doc-search").addEventListener("input", renderDocs);
 
     window.addEventListener("resize", syncStickyHeight);
   }
