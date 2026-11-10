@@ -5,8 +5,8 @@
   PROJECT: Kamhi Cup 2026 All-Stars Tournament Hub | AYSO Region 154 Cypress
   ----------------------------------------------------------------------------
   Structure only. Styling lives in css/styles.css; all data and behavior live
-  in js/app.js (KAMHI_CUP_DATA is the single object to sync from a Google Sheet).
-  All asset paths are relative so the page works from GitHub Pages sub-paths.
+  in js/app.js. Sections carry data-phase="registration" | "gameday"; the site
+  phase is set by KAMHI_CUP_DATA.site.phase (preview with ?phase=gameday).
   ============================================================================
 -->
 <html lang="en">
@@ -14,16 +14,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0a1d37">
-  <meta name="description" content="Official Kamhi Cup 2026 All-Stars Tournament hub for AYSO Region 154 Cypress: live schedule, standings, documents, field map, and rules.">
+  <meta name="description" content="The Kamhi Cup 2026 All-Stars Tournament, Saturday, December 12, 2026 in Cypress, CA. Register your team, download forms, and get answers.">
   <title>The Kamhi Cup 2026 | AYSO Region 154 Cypress All-Stars</title>
   <link rel="icon" type="image/png" href="crest.png">
   <link rel="preload" as="image" href="crest.png">
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <a class="skip-link" href="#schedule">Skip to schedule</a>
+<body data-phase="registration">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ===================== 1. HERO & STATUS ===================== -->
+  <!-- ===================== HERO (both phases) ===================== -->
   <header class="hero">
     <div class="hero__ribbon">
       <p class="hero__eyebrow">AYSO Region 154 Cypress &bull; All-Stars</p>
@@ -36,16 +36,16 @@
         <div class="hero__text">
           <h1 class="hero__title" data-bind="title">The Kamhi Cup 2026</h1>
           <div class="hero__meta">
-            <span class="meta-pill" data-bind="dates">Dec 5-6, 2026 &bull; Cypress, CA</span>
-            <span id="status-badge" class="status-badge" data-phase="pool" aria-live="polite">
-              <span class="dot"></span><span class="status-badge__text">Loading&hellip;</span>
+            <span class="meta-pill" data-bind="dates">Sat, Dec 12, 2026 &bull; Cypress, CA</span>
+            <span id="status-badge" class="status-badge" data-phase="open" aria-live="polite">
+              <span class="dot"></span><span class="status-badge__text">Registration Open</span>
             </span>
           </div>
         </div>
       </div>
 
       <div class="hero__side">
-        <div id="countdown" class="countdown" hidden role="timer" aria-label="Time until kickoff">
+        <div id="countdown" class="countdown" hidden role="timer" aria-label="Time until tournament day">
           <div class="countdown__unit"><span class="countdown__num" data-unit="days">00</span><span class="countdown__lbl">Days</span></div>
           <div class="countdown__unit"><span class="countdown__num" data-unit="hours">00</span><span class="countdown__lbl">Hours</span></div>
           <div class="countdown__unit"><span class="countdown__num" data-unit="mins">00</span><span class="countdown__lbl">Mins</span></div>
@@ -53,44 +53,122 @@
         </div>
         <p id="status-meta" class="status-card__meta"></p>
 
-        <nav class="quick-links" aria-label="Quick links">
+        <!-- Phase 1 calls to action -->
+        <nav class="hero-ctas" data-phase="registration" aria-label="Get started">
+          <a class="pill-btn pill-btn--cta" href="#register">Register your team <span aria-hidden="true">&rarr;</span></a>
+          <a class="pill-btn" href="#documents" data-open-details="doc-browser">Download forms</a>
+          <a class="pill-btn" href="#info">FAQ</a>
+        </nav>
+
+        <!-- Phase 2 quick links -->
+        <nav class="quick-links" data-phase="gameday" aria-label="Quick links">
           <a id="link-field-map" class="pill-btn" href="#rules">Field Map</a>
-          <a id="link-rules" class="pill-btn" href="#rules">Tournament Rules (PDF)</a>
+          <a id="link-rules" class="pill-btn" href="#rules">Tournament Rules</a>
           <a id="link-standings" class="pill-btn pill-btn--primary" href="#standings">Live Standings</a>
-          <a id="link-schedule" class="pill-btn pill-btn--primary" href="#schedule">Match Schedules</a>
+          <a id="link-schedule" class="pill-btn pill-btn--primary" href="#schedule">Match Schedule</a>
         </nav>
       </div>
     </div>
   </header>
 
-  <!-- ============ 2. STICKY TAB RAIL + DIVISION CHIPS ============ -->
+  <!-- ===================== STICKY TAB RAIL ===================== -->
   <div id="sticky-bar" class="sticky-bar">
     <div class="container">
       <nav class="sticky-bar__row section-nav" aria-label="Sections">
-        <div class="section-nav__links">
-          <a class="section-nav__link" href="#schedule">Schedule</a>
-          <a class="section-nav__link" href="#standings">Standings</a>
-          <a class="section-nav__link" href="#documents">Documents</a>
-          <a class="section-nav__link" href="#rules">Rules &amp; Field Map</a>
-        </div>
+        <div id="section-nav-links" class="section-nav__links"></div>
       </nav>
-      <div class="sticky-bar__row division-bar" role="group" aria-label="Filter by division">
+      <div class="sticky-bar__row division-bar" data-phase="gameday" role="group" aria-label="Filter by division">
         <div id="division-pills" class="division-pills"></div>
       </div>
     </div>
   </div>
 
-  <main>
-    <!-- ===================== 3. SCHEDULE & GAME CARDS ===================== -->
-    <section id="schedule" class="section" aria-labelledby="schedule-title">
+  <main id="main" class="main">
+
+    <!-- ========== PHASE 1: KEY DATES ========== -->
+    <section id="dates" class="section section--tight" data-phase="registration" aria-labelledby="dates-title">
+      <div class="container">
+        <h2 id="dates-title" class="section__title section__title--sm">Key Dates</h2>
+        <ol id="dates-list" class="timeline"></ol>
+      </div>
+    </section>
+
+    <!-- ========== PHASE 1: REGISTRATION CHECKLIST ========== -->
+    <section id="register" class="section" data-phase="registration" aria-labelledby="register-title">
       <div class="container">
         <div class="section__head">
           <div>
-            <h2 id="schedule-title" class="section__title">Live Schedule</h2>
+            <h2 id="register-title" class="section__title">Register in a Few Steps</h2>
+            <p class="section__sub">Pick your role, download each form, check it off, then submit your packet.</p>
+          </div>
+        </div>
+        <div id="role-chips" class="role-chips" role="group" aria-label="I am a"></div>
+        <div id="checklist" class="card checklist"></div>
+      </div>
+    </section>
+
+    <!-- ========== BOTH: ALL FILES (collapsed in Phase 1) ========== -->
+    <section id="documents" class="section section--tight" aria-label="All tournament files">
+      <div class="container">
+        <details id="doc-browser" class="card doc-browser">
+          <summary class="doc-browser__summary">
+            <span class="doc-browser__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/></svg>
+            </span>
+            <span class="doc-browser__label">Browse all tournament files</span>
+            <span id="doc-count" class="doc-browser__count" aria-live="polite"></span>
+            <svg class="doc-browser__chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="doc-browser__body">
+            <div class="toolbar">
+              <label class="search">
+                <span class="visually-hidden">Filter documents</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input id="doc-search" class="search__input" type="search" placeholder="Filter forms: roster, referee, rules..." autocomplete="off" enterkeyhint="search">
+              </label>
+            </div>
+            <div id="doc-list"></div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ========== PHASE 1: TOURNAMENT AT A GLANCE ========== -->
+    <section id="glance" class="section" data-phase="registration" aria-labelledby="glance-title">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 id="glance-title" class="section__title">Tournament at a Glance</h2>
+            <p class="section__sub">One day of All-Star soccer: pool play in the morning, division finals in the afternoon.</p>
+          </div>
+        </div>
+        <div id="glance-grid" class="glance-grid"></div>
+      </div>
+    </section>
+
+    <!-- ========== PHASE 1: INFO HUB / FAQ ========== -->
+    <section id="info" class="section" data-phase="registration" aria-labelledby="info-title">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 id="info-title" class="section__title">Info Hub &amp; FAQ</h2>
+            <p class="section__sub">Answers organized by topic. Items marked TBD are still being finalized by the board.</p>
+          </div>
+        </div>
+        <div id="info-tabs" class="info-tabs" role="tablist" aria-label="Topics"></div>
+        <div id="info-panel" class="card info-panel" role="tabpanel"></div>
+      </div>
+    </section>
+
+    <!-- ========== PHASE 2: SCHEDULE ========== -->
+    <section id="schedule" class="section" data-phase="gameday" aria-labelledby="schedule-title">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 id="schedule-title" class="section__title">Match Schedule</h2>
             <p class="section__sub">Tap a division above to filter. Add any match to your calendar or navigate straight to its field.</p>
           </div>
         </div>
-
         <div class="toolbar">
           <div id="status-filter" class="segmented" role="group" aria-label="Filter by status">
             <button type="button" data-status="all" aria-pressed="true">All</button>
@@ -100,21 +178,19 @@
           </div>
           <span id="result-count" class="result-count" aria-live="polite"></span>
         </div>
-
         <div id="schedule-list"></div>
       </div>
     </section>
 
-    <!-- ===================== 4. STANDINGS ===================== -->
-    <section id="standings" class="section" aria-labelledby="standings-title">
+    <!-- ========== PHASE 2: STANDINGS ========== -->
+    <section id="standings" class="section" data-phase="gameday" aria-labelledby="standings-title">
       <div class="container">
         <div class="section__head">
           <div>
             <h2 id="standings-title" class="section__title">Pool Play Standings</h2>
-            <p class="section__sub">Switch pools to see who is on track for Championship Sunday.</p>
+            <p class="section__sub">Switch pools to see who is on track for the finals.</p>
           </div>
         </div>
-
         <div class="toolbar">
           <div id="pool-toggle" class="segmented" role="group" aria-label="Select pool">
             <button type="button" data-pool="A" aria-pressed="true">Pool A</button>
@@ -125,36 +201,12 @@
             <select id="standings-division" class="select"></select>
           </label>
         </div>
-
         <div id="standings-table" class="card standings"></div>
       </div>
     </section>
 
-    <!-- ===================== 5. DOCUMENT CENTER ===================== -->
-    <section id="documents" class="section" aria-labelledby="documents-title">
-      <div class="container">
-        <div class="section__head">
-          <div>
-            <h2 id="documents-title" class="section__title">Coach &amp; Team Document Center</h2>
-            <p class="section__sub">Applications, rosters, rules, and referee forms. Download, or copy a link to share with your team.</p>
-          </div>
-        </div>
-
-        <div class="toolbar">
-          <label class="search">
-            <span class="visually-hidden">Filter documents</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input id="doc-search" class="search__input" type="search" placeholder="Filter forms: roster, referee, rules..." autocomplete="off" enterkeyhint="search">
-          </label>
-          <span id="doc-count" class="result-count" aria-live="polite"></span>
-        </div>
-
-        <div id="doc-list"></div>
-      </div>
-    </section>
-
-    <!-- ===================== 6. FIELD MARSHAL & RULES HUB ===================== -->
-    <section id="rules" class="section" aria-labelledby="rules-title">
+    <!-- ========== PHASE 2: RULES & FIELD MAP ========== -->
+    <section id="rules" class="section" data-phase="gameday" aria-labelledby="rules-title">
       <div class="container">
         <div class="section__head">
           <div>
@@ -165,25 +217,48 @@
         <div id="rules-accordion" class="accordion"></div>
       </div>
     </section>
+
+    <!-- ========== PHASE 1: SPONSORS ========== -->
+    <section id="sponsors" class="section" data-phase="registration" aria-labelledby="sponsors-title">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 id="sponsors-title" class="section__title">Tournament Sponsors &amp; Community Partners</h2>
+            <p class="section__sub">Local businesses make the Kamhi Cup possible. Put your name in front of hundreds of Cypress soccer families.</p>
+          </div>
+        </div>
+        <div id="sponsor-tiers" class="tier-grid"></div>
+        <p id="sponsor-note" class="note">Sponsor tiers and perks shown here are placeholders until the board confirms them.</p>
+        <div id="partner-grid" class="partner-grid" aria-label="Partners"></div>
+        <a id="sponsor-cta" class="pill-btn pill-btn--cta sponsor-cta" href="#contact">Become a Sponsor / Inquire</a>
+      </div>
+    </section>
+
+    <!-- ========== BOTH: CONTACT ========== -->
+    <section id="contact" class="section" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 id="contact-title" class="section__title">Contact the Tournament</h2>
+          </div>
+        </div>
+        <ul id="contact-list" class="contact-list"></ul>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
     <div class="container footer__inner">
       <span><strong data-bind="name">Kamhi Cup 2026</strong> &middot; <span data-bind="host">AYSO Region 154 Cypress</span></span>
       <span>
-        <span class="sample-tag" data-bind="sample">Sample data &middot; </span>
+        <span class="sample-tag" data-bind="sample" data-phase="gameday">Sample data &middot; </span>
         Updated <span data-bind="updated"></span>
       </span>
     </div>
   </footer>
 
-  <!-- Floating quick bar (mobile thumb zone) -->
-  <nav class="fab-nav" aria-label="Quick jump">
-    <a class="fab-nav__link" href="#schedule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule</a>
-    <a class="fab-nav__link" href="#standings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V10M12 21V4M19 21v-7"/></svg>Standings</a>
-    <a class="fab-nav__link" href="#documents"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/></svg>Docs</a>
-    <a class="fab-nav__link" href="#rules" data-open-drawer="marshals"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Map</a>
-  </nav>
+  <!-- Floating quick bar (mobile thumb zone), filled per phase by app.js -->
+  <nav id="fab-nav" class="fab-nav" aria-label="Quick jump"></nav>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="js/app.js"></script>
