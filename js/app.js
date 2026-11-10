@@ -32,7 +32,9 @@ const KAMHI_CUP_DATA = {
 
   tournament: {
     name: "Kamhi Cup 2026",
+    title: "The Kamhi Cup 2026",
     subtitle: "All-Stars Tournament",
+    dates: "Dec 5-6, 2026 • Cypress, CA",   // placeholder until official dates are confirmed
     host: "AYSO Region 154 Cypress",
     timeZone: "America/Los_Angeles",
     // Placeholder dates - the official dates are still TBD.
@@ -607,7 +609,7 @@ const KAMHI_DOCS = [
           .map((s) => `<div class="points-grid__cell"><span class="points-grid__num${s.negative ? " neg" : ""}">${esc(s.value)}</span><span class="points-grid__lbl">${esc(s.label)}</span></div>`)
           .join("")}</div>
         <h4>${esc(item.tiebreakersTitle || "Tiebreakers")}</h4>
-        <ol class="check-list">${item.tiebreakers.map((i) => `<li>${esc(i)}</li>`).join("")}</ol>${note}`;
+        <ol class="check-list check-list--red">${item.tiebreakers.map((i) => `<li>${esc(i)}</li>`).join("")}</ol>${note}`;
     }
     if (item.type === "stations") {
       return `${intro}<div class="station-list">${DATA.fields
@@ -802,11 +804,13 @@ const KAMHI_DOCS = [
   /* ---------- Static text binding ---------- */
   function renderChrome() {
     const t = DATA.tournament;
-    document.title = `${t.name} ${t.subtitle} | ${t.host}`;
+    document.title = `${t.title || t.name} | ${t.host} All-Stars`;
     $$("[data-bind]").forEach((el) => {
       const key = el.dataset.bind;
       if (key === "name") el.textContent = t.name;
       if (key === "subtitle") el.textContent = t.subtitle;
+      if (key === "title") el.textContent = t.title || t.name;
+      if (key === "dates") el.textContent = t.dates || "";
       if (key === "host") el.textContent = t.host;
       if (key === "updated") el.textContent = DATA.meta.lastUpdated;
       if (key === "sample") el.hidden = !DATA.meta.isSample;
