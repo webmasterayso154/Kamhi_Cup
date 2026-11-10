@@ -1,0 +1,512 @@
+<!--
+  ============================================================================
+  FILE: index.html
+  PROJECT: AYSO Region 154 Cypress - Kamhi Cup 2026 All-Stars Hub
+  REPOSITORY: https://github.com/webmasterayso154/Kamhi_Cup
+  AUTHOR: Bryan Nim (Webmaster & Tech Ops Lead | AYSO Region 154 Cypress)
+  ============================================================================
+  VERSION CONTROL & REVISION HISTORY:
+  - v0.1.0 | 2026-11-09 16:59 PST | Initial Draft: Full data-bound template
+    consuming css/tokens.css (3-tier CSS variables) and js/config.js (parent 
+    JS configuration object). Built for Dual-Host compatibility:
+      * Mode A (GitHub Pages): Standalone responsive webpage.
+      * Mode B (SportsConnect CMS): Copy from <div id="kamhi-cup-app"> to 
+        closing </div> into a SportsConnect Custom HTML module.
+  ============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kamhi Cup 2026 | AYSO Region 154 Cypress All-Stars Hub</title>
+
+  <!-- 1. Parent Design Tokens Stylesheet -->
+  <link rel="stylesheet" href="css/tokens.css">
+
+  <!-- 2. Scoped Component Styles (Consumes ONLY Tier 2 & Tier 3 Tokens) -->
+  <style>
+    /* Reset only inside .kc-root to protect SportsConnect parent navigation */
+    .kc-root,
+    .kc-root *,
+    .kc-root *::before,
+    .kc-root *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--kc-bg-canvas);
+      color: var(--kc-text-primary);
+      font-family: var(--kc-font-sans);
+    }
+
+    .kc-root {
+      font-family: var(--kc-font-sans);
+      background: var(--kc-bg-canvas);
+      color: var(--kc-text-primary);
+      line-height: 1.5;
+      padding: var(--kc-space-lg) var(--kc-space-md);
+    }
+
+    .kc-container {
+      max-width: var(--kc-layout-max-width);
+      margin: 0 auto;
+    }
+
+    /* Status Alert Banner (Propagates from KAMHI_CUP_CONFIG.meta) */
+    .kc-status-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--kc-space-md);
+      padding: var(--kc-space-sm) var(--kc-space-md);
+      border-radius: var(--kc-radius-sm);
+      margin-bottom: var(--kc-space-lg);
+      font-size: var(--kc-text-sm);
+      border: 1px solid var(--kc-status-tbd-border);
+      background: var(--kc-status-tbd-bg);
+      color: var(--kc-status-tbd-text);
+    }
+    .kc-status-banner[data-state="LIVE"] {
+      border-color: var(--kc-status-live-border);
+      background: var(--kc-status-live-bg);
+      color: var(--kc-status-live-text);
+    }
+    .kc-status-banner[data-state="CONFIRMED"] {
+      border-color: var(--kc-status-confirmed-border);
+      background: var(--kc-status-confirmed-bg);
+      color: var(--kc-status-confirmed-text);
+    }
+
+    /* Hero Header (Mirrors the Kamhi Cup Medallion & Ribbon Artwork) */
+    .kc-hero {
+      position: relative;
+      background: var(--kc-comp-header-bg);
+      border: 2px solid var(--kc-comp-header-border);
+      border-radius: var(--kc-radius-lg);
+      padding: var(--kc-space-2xl) var(--kc-space-lg);
+      text-align: center;
+      box-shadow: var(--kc-shadow-card), var(--kc-shadow-gold-glow);
+      overflow: hidden;
+      margin-bottom: var(--kc-space-xl);
+    }
+
+    .kc-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--kc-grad-glacier-sheen);
+      pointer-events: none;
+    }
+
+    .kc-hero-eyebrow {
+      display: inline-block;
+      background: var(--kc-grad-champion-gold);
+      color: var(--kc-text-on-gold);
+      font-weight: 800;
+      font-size: var(--kc-text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: var(--kc-radius-pill);
+      margin-bottom: var(--kc-space-sm);
+    }
+
+    .kc-hero-title {
+      font-family: var(--kc-font-display);
+      font-size: var(--kc-text-hero);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0 0 var(--kc-space-xs) 0;
+      color: var(--kc-text-primary);
+      text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .kc-hero-title span {
+      color: var(--kc-text-accent-gold);
+    }
+
+    .kc-hero-subtitle {
+      font-size: var(--kc-text-lg);
+      color: var(--kc-text-accent-ice);
+      margin: 0 0 var(--kc-space-md) 0;
+      font-weight: 600;
+    }
+
+    .kc-hero-meta {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--kc-space-sm);
+      font-size: var(--kc-text-sm);
+      color: var(--kc-text-secondary);
+      margin-bottom: var(--kc-space-lg);
+    }
+
+    /* Quick Action Ribbon Bar */
+    .kc-action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: var(--kc-space-md);
+      margin-top: var(--kc-space-md);
+      position: relative;
+      z-index: 1;
+    }
+
+    .kc-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--kc-radius-sm);
+      font-weight: 700;
+      font-size: var(--kc-text-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: transform var(--kc-transition-fast), box-shadow var(--kc-transition-fast);
+    }
+
+    .kc-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .kc-btn-crimson {
+      background: var(--kc-grad-finalist-crimson);
+      color: var(--kc-text-primary);
+      border: 1px solid var(--kc-border-red);
+      box-shadow: var(--kc-shadow-red-glow);
+    }
+
+    .kc-btn-gold {
+      background: var(--kc-grad-champion-gold);
+      color: var(--kc-text-on-gold);
+      box-shadow: var(--kc-shadow-gold-glow);
+    }
+
+    .kc-btn-ice {
+      background: var(--kc-bg-surface-elevated);
+      color: var(--kc-text-primary);
+      border: 1px solid var(--kc-border-ice);
+    }
+    .kc-btn-ice:hover {
+      box-shadow: var(--kc-shadow-ice-glow);
+    }
+
+    /* Section Containers */
+    .kc-section {
+      margin-bottom: var(--kc-space-2xl);
+    }
+
+    .kc-section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--kc-space-sm);
+      border-bottom: 2px solid var(--kc-border-gold);
+      padding-bottom: var(--kc-space-xs);
+      margin-bottom: var(--kc-space-lg);
+    }
+
+    .kc-section-title {
+      font-family: var(--kc-font-display);
+      font-size: var(--kc-text-2xl);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin: 0;
+      color: var(--kc-text-primary);
+    }
+
+    .kc-section-note {
+      font-size: var(--kc-text-sm);
+      color: var(--kc-text-accent-ice);
+    }
+
+    /* Cards & Grids */
+    .kc-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--kc-space-md);
+    }
+
+    .kc-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: var(--kc-space-md);
+    }
+
+    .kc-card {
+      background: var(--kc-comp-card-bg);
+      border: 1px solid var(--kc-comp-card-border);
+      border-radius: var(--kc-radius-md);
+      padding: var(--kc-space-lg);
+      box-shadow: var(--kc-shadow-card);
+      transition: border-color var(--kc-transition-base);
+    }
+
+    .kc-card:hover {
+      border-color: var(--kc-comp-card-hover-border);
+    }
+
+    .kc-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--kc-space-xs);
+      margin-bottom: var(--kc-space-sm);
+    }
+
+    .kc-card-title {
+      font-size: var(--kc-text-xl);
+      margin: 0 0 var(--kc-space-sm) 0;
+      color: var(--kc-text-accent-gold);
+    }
+
+    .kc-division-code,
+    .kc-badge-ice {
+      font-family: var(--kc-font-mono);
+      font-size: var(--kc-text-xs);
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--kc-radius-xs);
+      background: var(--kc-alpha-ice-tint);
+      color: var(--kc-text-accent-ice);
+      border: 1px solid var(--kc-border-ice);
+    }
+
+    .kc-status-pill {
+      font-size: var(--kc-text-xs);
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--kc-radius-pill);
+      background: var(--kc-status-tbd-bg);
+      color: var(--kc-status-tbd-text);
+      border: 1px solid var(--kc-status-tbd-border);
+    }
+
+    .kc-meta-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: var(--kc-text-sm);
+      color: var(--kc-text-secondary);
+    }
+
+    .kc-meta-list li {
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--kc-border-subtle);
+    }
+    .kc-meta-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Milestones / Timeline */
+    .kc-milestone-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--kc-space-sm);
+    }
+
+    .kc-milestone-item {
+      display: flex;
+      gap: var(--kc-space-md);
+      align-items: flex-start;
+      background: var(--kc-comp-card-bg);
+      border: 1px solid var(--kc-comp-card-border);
+      border-left: 4px solid var(--kc-accent-champion);
+      border-radius: var(--kc-radius-sm);
+      padding: var(--kc-space-md);
+    }
+
+    .kc-milestone-badge {
+      font-family: var(--kc-font-mono);
+      font-size: var(--kc-text-xs);
+      font-weight: 700;
+      background: var(--kc-grad-champion-gold);
+      color: var(--kc-text-on-gold);
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--kc-radius-xs);
+      white-space: nowrap;
+    }
+
+    .kc-milestone-body {
+      flex: 1;
+    }
+
+    .kc-milestone-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--kc-space-xs);
+      margin-bottom: 0.25rem;
+    }
+
+    .kc-milestone-top h4 {
+      margin: 0;
+      font-size: var(--kc-text-base);
+      color: var(--kc-text-primary);
+    }
+
+    .kc-milestone-body p {
+      margin: 0;
+      font-size: var(--kc-text-sm);
+      color: var(--kc-text-secondary);
+    }
+
+    /* Footer & Version Stamp */
+    .kc-footer {
+      text-align: center;
+      padding-top: var(--kc-space-lg);
+      border-top: 1px solid var(--kc-border-subtle);
+      font-size: var(--kc-text-xs);
+      color: var(--kc-text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       BEGIN SPORTSCONNECT EMBEDDABLE CONTAINER (#kamhi-cup-app)
+       ======================================================================== -->
+  <div id="kamhi-cup-app" class="kc-root">
+    <div class="kc-container">
+
+      <!-- 1. DYNAMIC STATUS BANNER (Controlled via KAMHI_CUP_CONFIG.meta) -->
+      <div id="kc-status-banner" class="kc-status-banner" data-state="TBD">
+        <div>
+          <strong>TOURNAMENT STATUS:</strong>
+          <span data-kc-bind="meta.statusBannerMessage">Loading status...</span>
+        </div>
+        <span class="kc-division-code" data-kc-bind="meta.version">v0.1.0</span>
+      </div>
+
+      <!-- 2. HERO HEADER (Bound to KAMHI_CUP_CONFIG.tournament) -->
+      <header class="kc-hero">
+        <span class="kc-hero-eyebrow" data-kc-bind="tournament.hostFullTitle">AYSO Region 154 Cypress</span>
+        <h1 class="kc-hero-title">
+          <span data-kc-bind="tournament.name">Kamhi Cup</span>
+          <strong data-kc-bind="tournament.year">2026</strong>
+        </h1>
+        <p class="kc-hero-subtitle" data-kc-bind="tournament.subtitle">
+          Official Post-Season All-Star Invitational
+        </p>
+        <div class="kc-hero-meta">
+          <span><strong>Dates:</strong> <span data-kc-bind="tournament.datesDisplay">TBD</span></span>
+          <span>•</span>
+          <span><strong>Check-In:</strong> <span data-kc-bind="tournament.checkInTimeOffset">60 mins prior</span></span>
+        </div>
+
+        <!-- Primary Navigation Actions -->
+        <nav class="kc-action-grid" aria-label="Tournament Quick Links">
+          <a data-kc-href="links.scheduleUrl" href="#section-schedules" class="kc-btn kc-btn-crimson">
+            Game Schedules & Pools
+          </a>
+          <a data-kc-href="links.standingsUrl" href="#section-standings" class="kc-btn kc-btn-gold">
+            Live Standings & Brackets
+          </a>
+          <a data-kc-href="links.rulesPdfUrl" href="#section-rules" class="kc-btn kc-btn-ice">
+            Rules & Scoring System
+          </a>
+          <a data-kc-href="links.fieldMapUrl" href="#section-fields" class="kc-btn kc-btn-ice">
+            Venues & Field Maps
+          </a>
+        </nav>
+      </header>
+
+      <!-- 3. DIVISIONS & MEDAL AWARDS (Auto-rendered from KAMHI_CUP_CONFIG.divisions) -->
+      <section id="section-schedules" class="kc-section">
+        <div class="kc-section-header">
+          <h2 class="kc-section-title">All-Star Divisions & Format</h2>
+          <span class="kc-section-note" data-kc-bind="tournament.awardsSummary">Champion & Finalist Medals</span>
+        </div>
+        <div id="kc-divisions-grid" class="kc-grid-3">
+          <!-- Populated dynamically by js/config.js -->
+        </div>
+      </section>
+
+      <!-- 4. TOURNAMENT TIMELINE & MILESTONES (Auto-rendered from KAMHI_CUP_CONFIG.milestones) -->
+      <section id="section-standings" class="kc-section">
+        <div class="kc-section-header">
+          <h2 class="kc-section-title">Tournament Milestones & Schedule Rollout</h2>
+          <span class="kc-section-note">Dates propagate automatically from config.js</span>
+        </div>
+        <div id="kc-milestone-list" class="kc-milestone-list">
+          <!-- Populated dynamically by js/config.js -->
+        </div>
+      </section>
+
+      <!-- 5. VENUES & FIELD ASSIGNMENTS (Auto-rendered from KAMHI_CUP_CONFIG.venues) -->
+      <section id="section-fields" class="kc-section">
+        <div class="kc-section-header">
+          <h2 class="kc-section-title">Venues & Field Check-In</h2>
+          <span class="kc-section-note" data-kc-bind="tournament.hostCity">Cypress, CA</span>
+        </div>
+        <div id="kc-venues-grid" class="kc-grid-2">
+          <!-- Populated dynamically by js/config.js -->
+        </div>
+      </section>
+
+      <!-- 6. SCORING & CONTACT SUMMARY (Bound to KAMHI_CUP_CONFIG.scoringRules & contacts) -->
+      <section id="section-rules" class="kc-section">
+        <div class="kc-section-header">
+          <h2 class="kc-section-title">10-Point Scoring & Tournament Contacts</h2>
+          <span class="kc-section-note">Official Kamhi Cup Standings Formula</span>
+        </div>
+        <div class="kc-grid-2">
+          <article class="kc-card">
+            <h3 class="kc-card-title">Pool Play Point System</h3>
+            <ul class="kc-meta-list">
+              <li><strong>Win:</strong> <span data-kc-bind="scoringRules.winPoints">6</span> Points</li>
+              <li><strong>Tie:</strong> <span data-kc-bind="scoringRules.tiePoints">3</span> Points</li>
+              <li><strong>Loss:</strong> <span data-kc-bind="scoringRules.lossPoints">0</span> Points</li>
+              <li><strong>Shutout Bonus:</strong> +<span data-kc-bind="scoringRules.shutoutBonus">1</span> Point</li>
+              <li><strong>Goals Bonus:</strong> <span data-kc-bind="scoringRules.goalBonusDescription">Up to 3 pts</span></li>
+              <li><strong>Red Card Deduction:</strong> <span data-kc-bind="scoringRules.redCardDeduction">-2</span> Points</li>
+            </ul>
+          </article>
+
+          <article class="kc-card">
+            <h3 class="kc-card-title">Tournament Operations & Leadership</h3>
+            <ul class="kc-meta-list">
+              <li>
+                <strong data-kc-bind="contacts.tournamentDirector.role">Tournament Director</strong>:
+                <span data-kc-bind="contacts.tournamentDirector.name">TBD</span>
+                (<span data-kc-bind="contacts.tournamentDirector.email">coachadmin154@gmail.com</span>)
+              </li>
+              <li>
+                <strong data-kc-bind="contacts.refereeAdmin.role">Referee Admin</strong>:
+                <span data-kc-bind="contacts.refereeAdmin.name">TBD</span>
+                (<span data-kc-bind="contacts.refereeAdmin.email">coachadmin154@gmail.com</span>)
+              </li>
+              <li>
+                <strong data-kc-bind="contacts.webmaster.role">Webmaster & Tech Ops</strong>:
+                <span data-kc-bind="contacts.webmaster.name">Bryan Nim</span>
+                (<span data-kc-bind="contacts.webmaster.email">webmasterayso154@gmail.com</span>)
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- 7. FOOTER WITH VERSION & TIMESTAMP PROPAGATION -->
+      <footer class="kc-footer">
+        <p>
+          <span data-kc-bind="tournament.fullTitle">Kamhi Cup 2026</span> •
+          <span data-kc-bind="tournament.hostFullTitle">AYSO Region 154 Cypress</span> •
+          Build <span data-kc-bind="meta.version">v0.1.0-draft</span> •
+          Last Revision: <span data-kc-bind="meta.lastUpdated">2026-11-09 16:59 PST</span>
+        </p>
+      </footer>
+
+    </div>
+  </div>
+  <!-- END SPORTSCONNECT EMBEDDABLE CONTAINER -->
+
+  <!-- 3. Parent Configuration & DOM Binding Script -->
+  <script src="js/config.js"></script>
+</body>
+</html>
